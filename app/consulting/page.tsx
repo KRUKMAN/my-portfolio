@@ -1,130 +1,233 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Database, Mail, User, Zap, Camera } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, CheckCircle2, Database, Mail, User, Zap, BarChart, RefreshCw, Settings2, Target } from "lucide-react";
 import Link from "next/link";
 import { PageSelector } from "../components/PageSelector";
 
 export default function ConsultingPage() {
   const [pipelineStep, setPipelineStep] = useState(0);
 
+  // Auto-run the simulation every few seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      runSimulation();
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
   const runSimulation = () => {
     setPipelineStep(1); 
     setTimeout(() => setPipelineStep(2), 1000); 
-    setTimeout(() => setPipelineStep(3), 2000); 
-    setTimeout(() => setPipelineStep(4), 3000); 
-    setTimeout(() => setPipelineStep(0), 5000); 
+    setTimeout(() => setPipelineStep(3), 2500); 
+    setTimeout(() => setPipelineStep(4), 4000); 
+    setTimeout(() => setPipelineStep(0), 6000); 
   };
 
   return (
-    <main className="min-h-screen bg-[#1a202c] text-slate-200 p-8 font-sans selection:bg-blue-500/30">
+    <main className="min-h-screen bg-[#0F1115] text-slate-200 p-6 selection:bg-blue-500/30 pb-32">
       
-      <nav className="flex justify-between items-center mb-10 max-w-6xl mx-auto">
-        <Link href="/" className="group flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
+      {/* --- NAV --- */}
+      <nav className="flex justify-between items-center mb-20 max-w-7xl mx-auto">
+        <Link 
+          href="/" 
+          className="group flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-white transition-colors"
+        >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span>Home</span>
         </Link>
-
-        <Link href="/photography">
-          <div className="group flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-full cursor-pointer transition-all backdrop-blur-md">
-            <span className="text-xs uppercase tracking-widest text-slate-400 group-hover:text-white">Switch to Gallery</span>
-            <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
-                <Camera className="w-4 h-4 text-white" />
-            </div>
-          </div>
-        </Link>
+        <div className="text-xs uppercase tracking-[0.2em] text-slate-600">
+          Ops Architecture
+        </div>
       </nav>
 
       <PageSelector />
 
-      <section className="max-w-4xl mx-auto mb-24">
-        <motion.div 
+      {/* --- HERO --- */}
+      <section className="max-w-7xl mx-auto mb-24">
+        <div className="max-w-3xl">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono mb-6"
+          >
+            <Settings2 className="w-3 h-3" />
+            REVOPS & STRATEGY
+          </motion.div>
+          
+          <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-        >
-          <div className="inline-block px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-mono mb-4">
-            SYSTEM ARCHITECTURE & OPS
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white">
-            Scaling Logic. <br />
-            <span className="text-slate-500">Removing Friction.</span>
-          </h1>
-          <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-            I don't just manage sales tools; I architect the ecosystems that make revenue predictable. 
-            From Hubspot automations to custom API integrations.
-          </p>
-        </motion.div>
+            transition={{ delay: 0.1 }}
+            className="text-5xl md:text-7xl font-semibold tracking-tight text-white mb-8"
+          >
+            I fix broken <br />
+            <span className="text-slate-600">revenue engines.</span>
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl text-slate-400 leading-relaxed max-w-2xl"
+          >
+            Most sales teams leak revenue because of bad data and disconnected tools. 
+            I re-architect your stack to make growth predictable.
+          </motion.p>
+        </div>
       </section>
 
-      <section className="max-w-5xl mx-auto mb-32">
-        <div className="border border-slate-700/50 bg-slate-800/30 rounded-3xl p-8 md:p-12 backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-          <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Zap className="text-yellow-400 w-5 h-5" />
-                Live Workflow Demo
-              </h3>
-              <p className="text-slate-400">
-                See how I structure data flows. Click the button to simulate a "New Lead" entering the CRM system.
-              </p>
-              
-              <button 
-                onClick={runSimulation}
-                disabled={pipelineStep > 0}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium shadow-lg shadow-blue-900/20 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {pipelineStep === 0 ? "Simulate New Lead" : "Processing..."}
-              </button>
+      {/* --- INTERACTIVE DASHBOARD MOCKUP --- */}
+      <section className="max-w-7xl mx-auto mb-32">
+        <div className="relative rounded-2xl border border-white/10 bg-[#16181D] overflow-hidden shadow-2xl">
+          
+          {/* Dashboard Header */}
+          <div className="border-b border-white/5 bg-white/5 px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
+              <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50" />
+            </div>
+            <div className="text-xs font-mono text-slate-500">Live Automation Monitor</div>
+          </div>
+
+          <div className="p-8 md:p-12 grid lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Left: Logic Visualization */}
+            <div className="space-y-4">
+               {/* Step 1 */}
+               <PipelineNode 
+                  active={pipelineStep >= 1} 
+                  icon={<User size={16} />} 
+                  title="Inbound Lead" 
+                  desc="Form submission captured via API."
+                  color="bg-blue-500"
+               />
+               <Connector active={pipelineStep >= 2} />
+               
+               {/* Step 2 */}
+               <PipelineNode 
+                  active={pipelineStep >= 2} 
+                  icon={<Database size={16} />} 
+                  title="Enrichment" 
+                  desc="Clearbit appends firmographic data."
+                  color="bg-purple-500"
+               />
+               <Connector active={pipelineStep >= 3} />
+
+               {/* Step 3 */}
+               <PipelineNode 
+                  active={pipelineStep >= 3} 
+                  icon={<Mail size={16} />} 
+                  title="Smart Routing" 
+                  desc="Lead scored & assigned to AE."
+                  color="bg-orange-500"
+               />
+
+               {/* Success State */}
+               <AnimatePresence>
+                 {pipelineStep === 4 && (
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="mt-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 flex items-center gap-3"
+                    >
+                        <CheckCircle2 size={20} />
+                        <span className="font-mono text-sm">Sync Complete. Revenue Recognized.</span>
+                    </motion.div>
+                 )}
+               </AnimatePresence>
             </div>
 
-            <div className="bg-slate-900/80 border border-slate-700 rounded-xl p-6 space-y-4">
-              <PipelineNode active={pipelineStep >= 1} icon={<User size={18} />} label="Lead Captured" sub="Form Submission" color="text-blue-400" />
-              <Connector active={pipelineStep >= 2} />
-              <PipelineNode active={pipelineStep >= 2} icon={<Database size={18} />} label="Data Enrichment" sub="Clearbit / Apollo API" color="text-purple-400" />
-              <Connector active={pipelineStep >= 3} />
-              <PipelineNode active={pipelineStep >= 3} icon={<Mail size={18} />} label="Outreach Sequence" sub="Automated Email Sent" color="text-orange-400" />
-               {pipelineStep === 4 && (
-                <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-2 text-green-400 text-sm justify-center">
-                    <CheckCircle2 size={16} /> Automation Complete
-                </motion.div>
-               )}
+            {/* Right: Context */}
+            <div className="space-y-8">
+                <div>
+                    <h3 className="text-2xl font-bold text-white mb-4">Don't just hire a human. <br/> Hire a system.</h3>
+                    <p className="text-slate-400 leading-relaxed">
+                        I build "Invisible Ops" — workflows that run in the background so your reps can focus on selling.
+                        <br /><br />
+                        <span className="text-white">Watch the demo on the left.</span> This is how I structure data flow to ensure zero lead leakage.
+                    </p>
+                </div>
+                <button 
+                    onClick={runSimulation}
+                    disabled={pipelineStep > 0}
+                    className="px-6 py-3 rounded-lg bg-white text-black font-medium text-sm hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                    <RefreshCw className={`w-4 h-4 ${pipelineStep > 0 ? 'animate-spin' : ''}`} />
+                    {pipelineStep > 0 ? "Running Logic..." : "Re-run Simulation"}
+                </button>
             </div>
+
           </div>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
-        <Card title="Tech Stack Audit" desc="Cleaning up redundant licenses and optimizing tool usage." />
-        <Card title="RevOps Strategy" desc="Aligning marketing, sales, and CS data into one truth." />
-        <Card title="No-Code Builds" desc="Zapier, Make, and n8n workflows that replace manual data entry." />
+      {/* --- SERVICES BENTO GRID --- */}
+      <section className="max-w-7xl mx-auto">
+        <h2 className="text-sm font-mono uppercase tracking-widest text-slate-500 mb-8">My Expertise</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+            <BentoCard 
+                title="Tech Stack Audit" 
+                desc="I identify redundant tools, broken integrations, and data silos that are costing you money."
+                icon={<BarChart className="text-blue-400" />}
+            />
+            <BentoCard 
+                title="RevOps Strategy" 
+                desc="Aligning Marketing, Sales, and CS data into one source of truth for accurate forecasting."
+                icon={<Target className="text-purple-400" />}
+            />
+            <BentoCard 
+                title="No-Code Builds" 
+                desc="Custom automation using Make, Zapier, and n8n to replace manual data entry tasks."
+                icon={<Zap className="text-orange-400" />}
+            />
+        </div>
       </section>
+
     </main>
   );
 }
 
-function PipelineNode({ active, icon, label, sub, color }: any) {
+// --- SUB-COMPONENTS ---
+
+function PipelineNode({ active, icon, title, desc, color }: any) {
     return (
-        <div className={`flex items-center gap-4 p-3 rounded-lg border transition-all duration-500 ${active ? 'bg-slate-800 border-slate-600 opacity-100' : 'bg-slate-900 border-transparent opacity-30'}`}>
-            <div className={`p-2 rounded-md bg-slate-950 ${color}`}>{icon}</div>
-            <div><div className="text-sm font-medium text-slate-200">{label}</div><div className="text-xs text-slate-500">{sub}</div></div>
-             {active && <motion.div layoutId="glow" className="ml-auto w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]" />}
+        <div className={`
+            relative z-10 flex items-center gap-4 p-4 rounded-xl border transition-all duration-500
+            ${active ? 'bg-white/5 border-white/20 opacity-100' : 'bg-transparent border-transparent opacity-30'}
+        `}>
+            <div className={`p-2 rounded-lg text-white shadow-lg ${color}`}>
+                {icon}
+            </div>
+            <div>
+                <h4 className="text-sm font-semibold text-white">{title}</h4>
+                <p className="text-xs text-slate-400 font-mono mt-0.5">{desc}</p>
+            </div>
+            {active && (
+                <motion.div layoutId="pulse" className="absolute right-4 w-2 h-2 rounded-full bg-green-400 shadow-[0_0_10px_#4ade80]" />
+            )}
         </div>
     )
 }
 
 function Connector({ active }: { active: boolean }) {
     return (
-        <div className="h-6 w-0.5 bg-slate-800 mx-6 relative"><div className={`absolute top-0 left-0 w-full bg-blue-500 transition-all duration-1000 ${active ? 'h-full' : 'h-0'}`} /></div>
+        <div className="h-8 w-px bg-white/10 ml-8 relative overflow-hidden">
+            <div className={`absolute top-0 left-0 w-full bg-blue-500 transition-all duration-700 ${active ? 'h-full' : 'h-0'}`} />
+        </div>
     )
 }
 
-function Card({ title, desc }: { title: string, desc: string }) {
+function BentoCard({ title, desc, icon }: any) {
     return (
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-600 transition-colors group">
-            <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">{title}</h3>
+        <div className="p-8 rounded-2xl bg-[#13151A] border border-white/5 hover:border-white/10 transition-colors group">
+            <div className="mb-6 p-3 bg-white/5 rounded-xl w-fit group-hover:bg-white/10 transition-colors">
+                {icon}
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-3">{title}</h3>
             <p className="text-slate-400 text-sm leading-relaxed">{desc}</p>
         </div>
     )
