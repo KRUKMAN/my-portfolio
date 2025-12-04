@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, Database, Mail, User, Zap, Camera } from "lucide-react";
 import Link from "next/link";
+import { PageSelector } from "../components/PageSelector";
 
 export default function ConsultingPage() {
   const [pipelineStep, setPipelineStep] = useState(0);
@@ -19,7 +20,7 @@ export default function ConsultingPage() {
   return (
     <main className="min-h-screen bg-[#1a202c] text-slate-200 p-8 font-sans selection:bg-blue-500/30">
       
-      <nav className="flex justify-between items-center mb-16 max-w-6xl mx-auto">
+      <nav className="flex justify-between items-center mb-10 max-w-6xl mx-auto">
         <Link href="/" className="group flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span>Home</span>
@@ -34,6 +35,8 @@ export default function ConsultingPage() {
           </div>
         </Link>
       </nav>
+
+      <PageSelector />
 
       <section className="max-w-4xl mx-auto mb-24">
         <motion.div 

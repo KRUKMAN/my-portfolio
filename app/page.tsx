@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { PageSelector } from "./components/PageSelector";
 
 type Card = {
   id: string;
@@ -98,6 +99,8 @@ export default function Home() {
           Which Jake do you want today?
         </p>
       </div>
+
+      <PageSelector />
 
       <div className="relative w-full max-w-[500px] aspect-[1.45/1] mx-auto perspective-1000 group">
         {cards.map((card, index) => {

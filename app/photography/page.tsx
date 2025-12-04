@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, BarChart3, Instagram, Camera } from "lucide-react";
 import Link from "next/link";
+import { PageSelector } from "../components/PageSelector";
 
 const photos = [
   { id: 1, title: "Urban Geometry", size: "tall", color: "bg-neutral-800" },
@@ -17,7 +18,7 @@ export default function PhotographyPage() {
   return (
     <main className="min-h-screen bg-black text-white p-8 selection:bg-orange-500/30">
       
-      <nav className="flex justify-between items-center mb-16 max-w-7xl mx-auto sticky top-4 z-50 mix-blend-difference">
+      <nav className="flex justify-between items-center mb-10 max-w-7xl mx-auto sticky top-4 z-50 mix-blend-difference">
         <Link href="/" className="group flex items-center gap-2 text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span>Home</span>
@@ -32,6 +33,8 @@ export default function PhotographyPage() {
           </div>
         </Link>
       </nav>
+
+      <PageSelector />
 
       <header className="max-w-7xl mx-auto mb-24 px-4">
         <motion.h1 
