@@ -26,7 +26,7 @@ export default function Home() {
   // Logic: Handle the snap when user lets go
   const handleDragEnd = () => {
     const currentX = x.get();
-    const threshold = 60; // Distance needed to trigger switch
+    const threshold = 40; // Distance needed to trigger switch (easier slide)
 
     if (currentX > threshold) {
       setMode("photo");
@@ -127,30 +127,30 @@ export default function Home() {
       </div>
 
       {/* --- THE CAPSULE SWITCH --- */}
-      <div className="absolute bottom-20">
-        <div className="relative w-[300px] h-[72px] rounded-full bg-black/5 backdrop-blur-md border border-black/5 shadow-inner flex items-center justify-between px-2">
+      <div className="mt-12 sm:mt-16">
+        <div className="relative w-[340px] h-[84px] rounded-full bg-black/5 backdrop-blur-md border border-black/5 shadow-inner flex items-center justify-between px-3 sm:px-4">
             
             <div className={`absolute inset-0 rounded-full transition-colors duration-500 ${mode !== 'neutral' ? 'bg-white/10 border-white/10' : ''}`} />
 
             {/* Left Label */}
-            <div onClick={() => handleLabelClick('ops')} className="z-10 w-[100px] text-center cursor-pointer group">
-                <span className={`text-xs font-bold tracking-widest uppercase transition-colors duration-300 ${mode === 'ops' ? 'opacity-0' : 'opacity-40 group-hover:opacity-100'}`}>Ops</span>
+            <div onClick={() => handleLabelClick('ops')} className="z-10 w-[120px] text-center cursor-pointer group">
+                <span className={`text-sm font-bold tracking-widest uppercase transition-colors duration-300 ${mode === 'ops' ? 'opacity-0' : 'opacity-40 group-hover:opacity-100'}`}>Ops</span>
             </div>
 
             {/* Right Label */}
-            <div onClick={() => handleLabelClick('photo')} className="z-10 w-[100px] text-center cursor-pointer group">
-                <span className={`text-xs font-bold tracking-widest uppercase transition-colors duration-300 ${mode === 'photo' ? 'opacity-0' : 'opacity-40 group-hover:opacity-100'}`}>Photo</span>
+            <div onClick={() => handleLabelClick('photo')} className="z-10 w-[120px] text-center cursor-pointer group">
+                <span className={`text-sm font-bold tracking-widest uppercase transition-colors duration-300 ${mode === 'photo' ? 'opacity-0' : 'opacity-40 group-hover:opacity-100'}`}>Photo</span>
             </div>
 
             {/* Handle */}
             <motion.div
                 style={{ x }}
                 drag="x"
-                dragConstraints={{ left: -110, right: 110 }}
-                dragElastic={0.05}
+                dragConstraints={{ left: -130, right: 130 }}
+                dragElastic={0.15}
                 dragMomentum={false}
                 onDragEnd={handleDragEnd}
-                className="absolute left-0 right-0 mx-auto z-20 w-[64px] h-[64px] rounded-full bg-white shadow-[0_4px_12px_rgba(0,0,0,0.15)] flex items-center justify-center cursor-grab active:cursor-grabbing hover:scale-105 active:scale-95 transition-transform"
+                className="absolute left-0 right-0 mx-auto z-20 w-[72px] h-[72px] rounded-full bg-white shadow-[0_6px_18px_rgba(0,0,0,0.16)] flex items-center justify-center cursor-grab active:cursor-grabbing hover:scale-105 active:scale-95 transition-transform"
             >
                 {mode === "neutral" && <div className="w-1.5 h-8 rounded-full bg-stone-300" />}
                 {mode === "ops" && <BarChart3 className="w-6 h-6 text-blue-600 animate-in fade-in zoom-in duration-300" />}
