@@ -1,66 +1,66 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, X, Camera, MapPin, Aperture, Timer, Mountain } from "lucide-react";
+import { ArrowLeft, X, Camera, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { PageSelector } from "../components/PageSelector";
 import Image from "next/image";
 
-// --- DATA: Your Photos & Technical Data ---
+// --- DATA ---
 const photos = [
   { 
     id: 1, 
     title: "Urban Geometry", 
-    location: "Tokyo, JP",
-    specs: { iso: "800", f: "1.8", s: "1/250" },
+    location: "Tokyo",
+    year: "2024",
     size: "tall", 
-    color: "bg-neutral-800",
+    color: "bg-neutral-900",
     src: "/photo1.jpg" 
   },
   { 
     id: 2, 
     title: "Midnight Silence", 
-    location: "Berlin, DE",
-    specs: { iso: "1600", f: "2.8", s: "1/60" },
+    location: "Berlin",
+    year: "2023",
     size: "short", 
-    color: "bg-stone-800",
+    color: "bg-stone-900",
     src: "/photo2.jpg" 
   },
   { 
     id: 3, 
     title: "Kinetic Motion", 
-    location: "New York, USA",
-    specs: { iso: "200", f: "11", s: "2s" },
+    location: "New York",
+    year: "2024",
     size: "short", 
-    color: "bg-zinc-800",
+    color: "bg-zinc-900",
     src: "/photo3.jpg" 
   },
   { 
     id: 4, 
     title: "Light Leak", 
-    location: "London, UK",
-    specs: { iso: "400", f: "1.4", s: "1/1000" },
+    location: "London",
+    year: "2022",
     size: "tall", 
-    color: "bg-neutral-700",
+    color: "bg-neutral-800",
     src: "/photo4.jpg" 
   },
   { 
     id: 5, 
     title: "Portrait Study", 
-    location: "Paris, FR",
-    specs: { iso: "100", f: "1.2", s: "1/500" },
+    location: "Paris",
+    year: "2023",
     size: "tall", 
-    color: "bg-stone-700",
+    color: "bg-stone-800",
     src: "/photo5.jpg" 
   },
   { 
     id: 6, 
     title: "Abstract Forms", 
-    location: "Copenhagen, DK",
-    specs: { iso: "3200", f: "4.0", s: "1/125" },
+    location: "Copenhagen",
+    year: "2024",
     size: "short", 
-    color: "bg-zinc-700",
+    color: "bg-zinc-800",
     src: "/photo6.jpg" 
   },
 ];
@@ -68,177 +68,186 @@ const photos = [
 export default function PhotographyPage() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
+  // --- NAVIGATION LOGIC ---
+  const handleNext = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedId === null) return;
+    
+    const currentIndex = photos.findIndex((p) => p.id === selectedId);
+    const nextIndex = (currentIndex + 1) % photos.length; // Loops back to 0
+    setSelectedId(photos[nextIndex].id);
+  }, [selectedId]);
+
+  const handlePrev = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedId === null) return;
+
+    const currentIndex = photos.findIndex((p) => p.id === selectedId);
+    const prevIndex = (currentIndex - 1 + photos.length) % photos.length; // Loops to end
+    setSelectedId(photos[prevIndex].id);
+  }, [selectedId]);
+
+  // --- KEYBOARD LISTENERS ---
+  useEffect(() => {
+    if (!selectedId) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "Escape") setSelectedId(null);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedId, handleNext, handlePrev]);
+
   return (
-    <main className="min-h-screen bg-[#050505] text-white p-6 selection:bg-orange-500/30 pb-32">
+    <main className="min-h-screen bg-[#0a0a0a] text-white selection:bg-white/20 pb-32">
       
-      {/* --- NAV --- */}
-      <nav className="flex justify-between items-center mb-16 max-w-7xl mx-auto">
+      {/* --- MINIMAL NAV --- */}
+      <nav className="fixed top-0 left-0 right-0 z-40 flex justify-between items-center p-8 mix-blend-difference">
         <Link 
           href="/" 
-          className="group flex items-center gap-2 text-sm font-medium text-white/50 hover:text-white transition-colors"
+          className="group flex items-center gap-3 text-sm font-medium text-white/80 hover:text-white transition-colors"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span>Back Home</span>
+          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          <span className="tracking-widest uppercase text-xs">Home</span>
         </Link>
-        <div className="text-xs uppercase tracking-[0.2em] text-white/30">
-          Portfolio
+        
+        {/* Simple Brand Mark */}
+        <div className="text-sm font-serif italic tracking-wider opacity-80">
+          Jakub Krukowski
         </div>
       </nav>
 
       <PageSelector />
 
-      {/* --- HEADER --- */}
-      <header className="max-w-7xl mx-auto mb-20">
-        <motion.h1 
+      {/* --- HERO SECTION --- */}
+      <section className="pt-40 pb-24 px-6 md:px-12 max-w-screen-2xl mx-auto flex flex-col items-center text-center">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-5xl md:text-7xl font-serif tracking-tight text-white/90"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="max-w-3xl"
         >
-          Captured Light.
-        </motion.h1>
-        <motion.p 
-           initial={{ opacity: 0 }}
-           animate={{ opacity: 1 }}
-           transition={{ delay: 0.2 }}
-           className="mt-6 text-white/50 max-w-xl text-lg font-light leading-relaxed"
-        >
-          Moments frozen in time. Exploring the intersection of structured cityscapes and human chaos.
-        </motion.p>
-      </header>
+          <h1 className="text-6xl md:text-9xl font-serif font-light tracking-tight leading-[0.9] mb-8 text-white/90">
+            Selected <br/> Works
+          </h1>
+          <p className="text-white/40 text-sm md:text-base uppercase tracking-[0.2em] font-light max-w-md mx-auto leading-relaxed">
+            A visual archive of light, structure, and fleeting moments from across the globe.
+          </p>
+        </motion.div>
+      </section>
 
-      {/* --- MASONRY GRID (CSS COLUMNS) --- */}
-      <section className="max-w-7xl mx-auto">
-        {/* Changed from 'grid' to 'columns' to fix the uneven gaps */}
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-          {photos.map((photo) => (
-            <div key={photo.id} className="break-inside-avoid mb-6">
+      {/* --- CINEMATIC MASONRY GRID --- */}
+      <section className="px-4 md:px-12 max-w-[1800px] mx-auto">
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-4 md:gap-8 space-y-4 md:space-y-8">
+          {photos.map((photo, index) => (
+            <div key={photo.id} className="break-inside-avoid">
               <motion.div
                 layoutId={`card-${photo.id}`}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
                 onClick={() => setSelectedId(photo.id)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
                 className={`
-                  relative cursor-pointer group rounded-xl overflow-hidden 
-                  ${photo.size === 'tall' ? 'aspect-[3/4]' : 'aspect-square'} 
-                  ${photo.color} w-full
+                  relative w-full cursor-pointer group 
+                  ${photo.size === 'tall' ? 'aspect-[3/4]' : 'aspect-[4/3]'} 
+                  bg-[#111] overflow-hidden
                 `}
               >
-                {/* Real Image Tag - Uncomment when you have files */}
-                {/* <Image 
-                  src={photo.src} 
-                  alt={photo.title} 
-                  fill 
-                  className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" 
-                /> 
-                */}
-                
-                {/* Placeholder Icon */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-10 group-hover:opacity-20 transition-opacity">
-                  <Camera size={64} />
+                {/* --- IMAGE CONTAINER --- */}
+                <div className={`w-full h-full ${photo.color} relative overflow-hidden`}>
+                   {/* UNCOMMENT FOR REAL IMAGES: */}
+                   {/* <Image 
+                      src={photo.src} 
+                      alt={photo.title} 
+                      fill 
+                      className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105" 
+                   /> */}
+                   
+                   {/* Placeholder Icon */}
+                   <div className="absolute inset-0 flex items-center justify-center opacity-5 group-hover:opacity-10 transition-opacity duration-500">
+                      <Camera size={48} strokeWidth={1} />
+                   </div>
                 </div>
 
-                {/* Hover Info */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end">
-                  <span className="text-sm font-medium text-white">{photo.title}</span>
-                  <span className="text-xs text-white/60">{photo.location}</span>
+                {/* --- HOVER OVERLAY (Minimal) --- */}
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
+                
+                <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 flex justify-between items-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="text-left">
+                    <h3 className="text-xl font-serif italic text-white mb-1">{photo.title}</h3>
+                    <p className="text-[10px] uppercase tracking-widest text-white/60">{photo.location} — {photo.year}</p>
+                  </div>
                 </div>
+
               </motion.div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* --- EXPANDED VIEW (MODAL) --- */}
+      {/* --- FULLSCREEN MODAL --- */}
       <AnimatePresence>
         {selectedId && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 md:p-12">
             
-            {/* Backdrop with Blur */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedId(null)}
-              className="absolute inset-0 bg-black/90 backdrop-blur-md cursor-pointer"
-            />
+            {/* Navigation Buttons (Left/Right) */}
+            <button 
+              onClick={handlePrev}
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md group"
+            >
+              <ChevronLeft size={32} strokeWidth={1} className="group-hover:-translate-x-1 transition-transform" />
+            </button>
 
-            {/* The Expanded Card */}
+            <button 
+              onClick={handleNext}
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md group"
+            >
+              <ChevronRight size={32} strokeWidth={1} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            {/* Close Button */}
+            <motion.button 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              onClick={() => setSelectedId(null)}
+              className="absolute top-6 right-6 z-50 p-4 text-white/50 hover:text-white transition-colors"
+            >
+              <X size={24} strokeWidth={1} />
+            </motion.button>
+
             {photos.map((photo) => {
               if (photo.id !== selectedId) return null;
               return (
                 <motion.div
                   layoutId={`card-${photo.id}`}
                   key={photo.id}
-                  className="relative w-full max-w-5xl bg-[#111] rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex flex-col md:flex-row max-h-[90vh]"
+                  className="relative w-full h-full max-h-[1200px] flex flex-col md:flex-row items-center justify-center pointer-events-none"
                 >
                   
-                  {/* Close Button */}
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); setSelectedId(null); }}
-                    className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/50 text-white/70 hover:text-white hover:bg-black/80 transition-colors"
-                  >
-                    <X size={20} />
-                  </button>
-
-                  {/* Left: Image Area */}
-                  <div className={`relative w-full md:w-2/3 ${photo.color} min-h-[300px] md:min-h-[500px]`}>
-                     {/* Real Image Tag - Uncomment when ready */}
-                     {/* <Image src={photo.src} alt={photo.title} fill className="object-cover" /> */}
+                  {/* Image Container (Pointer events auto to allow right click save etc if needed, but clicks handled by parent for nav) */}
+                  <div className={`relative w-full h-full md:w-auto md:aspect-[3/4] max-h-full ${photo.color} shadow-2xl pointer-events-auto`}>
+                     {/* <Image src={photo.src} alt={photo.title} fill className="object-contain" /> */}
                      <div className="absolute inset-0 flex items-center justify-center text-white/10">
-                        <Camera size={96} />
+                        <Camera size={96} strokeWidth={0.5} />
                      </div>
                   </div>
 
-                  {/* Right: Technical Details */}
-                  <div className="w-full md:w-1/3 p-8 flex flex-col justify-between bg-[#111]">
-                    <div>
-                        <motion.h2 
-                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                            className="text-3xl font-serif mb-2"
-                        >
-                            {photo.title}
-                        </motion.h2>
-                        <motion.div 
-                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-                            className="flex items-center gap-2 text-white/40 text-sm mb-8"
-                        >
-                            <MapPin size={14} /> {photo.location}
-                        </motion.div>
-
-                        <motion.p 
-                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-                            className="text-white/70 leading-relaxed font-light"
-                        >
-                            Capturing the essence of the environment through high-contrast composition. A study in light and shadow.
-                        </motion.p>
+                  {/* Caption (Floating) */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="absolute bottom-8 md:bottom-auto md:right-12 md:top-1/2 md:-translate-y-1/2 text-center md:text-left pointer-events-none"
+                  >
+                    <h2 className="text-3xl md:text-5xl font-serif italic text-white mb-4">{photo.title}</h2>
+                    <div className="flex flex-col gap-1 text-xs uppercase tracking-[0.2em] text-white/40">
+                      <span>{photo.location}</span>
+                      <span>{photo.year}</span>
                     </div>
-
-                    {/* Tech Specs Grid */}
-                    <motion.div 
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-                        className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-white/10"
-                    >
-                        <div className="space-y-1">
-                            <span className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-white/30">
-                              <Mountain size={10} /> ISO
-                            </span>
-                            <span className="text-lg font-mono text-blue-200">{photo.specs.iso}</span>
-                        </div>
-                        <div className="space-y-1">
-                            <span className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-white/30">
-                              <Aperture size={10} /> Aperture
-                            </span>
-                            <span className="text-lg font-mono text-blue-200">f/{photo.specs.f}</span>
-                        </div>
-                        <div className="space-y-1">
-                            <span className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-white/30">
-                              <Timer size={10} /> Shutter
-                            </span>
-                            <span className="text-lg font-mono text-blue-200">{photo.specs.s}</span>
-                        </div>
-                    </motion.div>
-                  </div>
+                  </motion.div>
 
                 </motion.div>
               );
