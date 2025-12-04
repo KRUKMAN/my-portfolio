@@ -1,162 +1,175 @@
 "use client";
 
-import { useState } from "react";
-import { motion, useMotionValue, animate } from "framer-motion";
-import { ArrowRight, BarChart3, Camera, MoveHorizontal } from "lucide-react";
-import Link from "next/link";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowUpRight, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+type Card = {
+  id: string;
+  name: string;
+  role: string;
+  subRole: string;
+  tagline: string;
+  theme: string;
+  textColor: string;
+  secondaryColor: string;
+  font: string;
+  contact: string;
+  link: string;
+};
+
+// --- CARD DATA ---
+const initialCards: Card[] = [
+  {
+    id: "consulting",
+    name: "Jakub Krukowski",
+    role: "Sales & Ops",
+    subRole: "Consulting",
+    tagline: "Strategic Operational Excellence",
+    theme: "bg-[#1c1c1c]",
+    textColor: "text-white",
+    secondaryColor: "text-gray-400",
+    font: "font-sans tracking-tight",
+    contact: "consulting@jakub.com",
+    link: "/consulting",
+  },
+  {
+    id: "ai",
+    name: "Jakub Krukowski",
+    role: "AI / Automation",
+    subRole: "Low-Code Architect",
+    tagline: "Intelligent Workflows",
+    theme: "bg-[#ffffff] border border-gray-200",
+    textColor: "text-black",
+    secondaryColor: "text-gray-500",
+    font: "font-mono tracking-tighter",
+    contact: "ai@jakub.com",
+    link: "/ai-automation",
+  },
+  {
+    id: "events",
+    name: "JAKUB KRUKOWSKI",
+    role: "Brand & Event",
+    subRole: "Photography",
+    tagline: "Visual Identity & Moments",
+    theme: "bg-[#e3e1d5]",
+    textColor: "text-[#2a2a2a]",
+    secondaryColor: "text-[#6a6a6a]",
+    font: "font-serif tracking-wide",
+    contact: "events@jakub.com",
+    link: "/photography",
+  },
+  {
+    id: "street",
+    name: "jakub krukowski",
+    role: "Street",
+    subRole: "Photography",
+    tagline: "Unscripted Urban Narratives",
+    theme: "bg-[#ff4400]",
+    textColor: "text-white",
+    secondaryColor: "text-white/70",
+    font: "font-sans font-black uppercase italic",
+    contact: "street@jakub.com",
+    link: "/art",
+  },
+];
 
 export default function Home() {
-  const [mode, setMode] = useState<"neutral" | "ops" | "photo">("neutral");
-  const x = useMotionValue(0);
+  const [cards, setCards] = useState<Card[]>(initialCards);
+  const router = useRouter();
 
-  // Background colors
-  const bgColors = {
-    neutral: "bg-[#FDFBF7]", // Cream
-    ops: "bg-[#2A303C]",     // Dark Slate
-    photo: "bg-[#050505]",   // Deep Black
+  const moveToEnd = (fromIndex: number) => {
+    if (fromIndex !== 0) return;
+    const newCards = [...cards];
+    const item = newCards.splice(fromIndex, 1)[0];
+    newCards.push(item);
+    setCards(newCards);
   };
 
-  // Text Colors
-  const textColors = {
-    neutral: "text-stone-800",
-    ops: "text-blue-100",
-    photo: "text-stone-300",
-  };
-
-  // Logic: Handle the snap when user lets go
-  const handleDragEnd = () => {
-    const currentX = x.get();
-    const threshold = 40; // Distance needed to trigger switch (easier slide)
-
-    if (currentX > threshold) {
-      setMode("photo");
-      animate(x, 110, { type: "spring", stiffness: 300, damping: 25 }); // Snap Right
-    } else if (currentX < -threshold) {
-      setMode("ops");
-      animate(x, -110, { type: "spring", stiffness: 300, damping: 25 }); // Snap Left
-    } else {
-      setMode("neutral");
-      animate(x, 0, { type: "spring", stiffness: 400, damping: 20 }); // Snap Center
-    }
-  };
-
-  // Logic: Click label to switch
-  const handleLabelClick = (target: "ops" | "photo") => {
-    if (target === "ops") {
-      setMode("ops");
-      animate(x, -110, { type: "spring", stiffness: 300, damping: 25 });
-    } else {
-      setMode("photo");
-      animate(x, 110, { type: "spring", stiffness: 300, damping: 25 });
-    }
+  const handleNavigation = (link: string) => {
+    router.push(link);
   };
 
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-center relative overflow-hidden transition-colors duration-700 ease-out ${bgColors[mode]} ${textColors[mode]}`}
-    >
-      {/* --- CONTENT AREA --- */}
-      <div className="z-10 flex flex-col items-center text-center max-w-2xl px-6 h-[300px] justify-center">
-        
-        {/* Neutral State */}
-        {mode === "neutral" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-4"
-          >
-            <div className="w-16 h-16 rounded-full bg-stone-200/50 flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
-              <MoveHorizontal className="opacity-50" />
-            </div>
-            <h1 className="text-xl font-medium tracking-[0.2em] uppercase opacity-60">
-              Select Your Path
-            </h1>
-          </motion.div>
-        )}
-
-        {/* Operations State */}
-        {mode === "ops" && (
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
-          >
-            <div className="inline-block p-3 rounded-2xl bg-blue-500/20 mb-2">
-              <BarChart3 className="w-8 h-8 text-blue-300" />
-            </div>
-            <div>
-              <h1 className="text-5xl font-bold tracking-tight mb-2">Operations.</h1>
-              <p className="text-xl text-blue-200/60 font-light">
-                Sales logic & Automation architecture.
-              </p>
-            </div>
-            <Link href="/consulting">
-              <button className="group mt-4 px-8 py-3 rounded-full bg-blue-500 hover:bg-blue-400 text-white font-medium transition-all flex items-center gap-2 mx-auto">
-                Explore Solutions
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </Link>
-          </motion.div>
-        )}
-
-        {/* Photography State */}
-        {mode === "photo" && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
-          >
-             <div className="inline-block p-3 rounded-2xl bg-white/10 mb-2">
-              <Camera className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-5xl font-serif italic mb-2">Photography.</h1>
-              <p className="text-xl text-stone-400 font-light">
-                Narrative through a lens.
-              </p>
-            </div>
-            <Link href="/photography">
-              <button className="group mt-4 px-8 py-3 rounded-full bg-white hover:bg-stone-200 text-black font-medium transition-all flex items-center gap-2 mx-auto">
-                View Gallery
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </Link>
-          </motion.div>
-        )}
+    <main className="min-h-screen bg-gradient-to-b from-[#0f1115] to-[#090a0f] flex flex-col items-center justify-center px-6 py-16 text-white">
+      <div className="text-center mb-10">
+        <p className="text-sm sm:text-base tracking-[0.18em] uppercase text-white/60">
+          Which Jake do you want today?
+        </p>
       </div>
 
-      {/* --- THE CAPSULE SWITCH --- */}
-      <div className="mt-12 sm:mt-16">
-        <div className="relative w-[340px] h-[84px] rounded-full bg-black/5 backdrop-blur-md border border-black/5 shadow-inner flex items-center justify-between px-3 sm:px-4">
-            
-            <div className={`absolute inset-0 rounded-full transition-colors duration-500 ${mode !== 'neutral' ? 'bg-white/10 border-white/10' : ''}`} />
-
-            {/* Left Label */}
-            <div onClick={() => handleLabelClick('ops')} className="z-10 w-[120px] text-center cursor-pointer group">
-                <span className={`text-sm font-bold tracking-widest uppercase transition-colors duration-300 ${mode === 'ops' ? 'opacity-0' : 'opacity-40 group-hover:opacity-100'}`}>Ops</span>
-            </div>
-
-            {/* Right Label */}
-            <div onClick={() => handleLabelClick('photo')} className="z-10 w-[120px] text-center cursor-pointer group">
-                <span className={`text-sm font-bold tracking-widest uppercase transition-colors duration-300 ${mode === 'photo' ? 'opacity-0' : 'opacity-40 group-hover:opacity-100'}`}>Photo</span>
-            </div>
-
-            {/* Handle */}
+      <div className="relative w-full max-w-[500px] aspect-[1.45/1] mx-auto perspective-1000 group">
+        {cards.map((card, index) => {
+          return (
             <motion.div
-                style={{ x }}
-                drag="x"
-                dragConstraints={{ left: -130, right: 130 }}
-                dragElastic={0.15}
-                dragMomentum={false}
-                onDragEnd={handleDragEnd}
-                className="absolute left-0 right-0 mx-auto z-20 w-[72px] h-[72px] rounded-full bg-white shadow-[0_6px_18px_rgba(0,0,0,0.16)] flex items-center justify-center cursor-grab active:cursor-grabbing hover:scale-105 active:scale-95 transition-transform"
+              key={card.id}
+              layoutId={card.id}
+              onClick={() => moveToEnd(index)}
+              initial={false}
+              animate={{
+                scale: 1 - index * 0.02,
+                y: index * 8,
+                x: index * 2,
+                rotate: index === 0 ? 0 : index % 2 === 0 ? 2 : -1,
+                zIndex: cards.length - index,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className={`absolute top-0 left-0 w-full h-full rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.12)] overflow-hidden cursor-pointer ${card.theme} flex flex-col justify-between p-7 md:p-10 transition-shadow duration-300 hover:shadow-[0_22px_48px_rgba(0,0,0,0.18)]`}
             >
-                {mode === "neutral" && <div className="w-1.5 h-8 rounded-full bg-stone-300" />}
-                {mode === "ops" && <BarChart3 className="w-6 h-6 text-blue-600 animate-in fade-in zoom-in duration-300" />}
-                {mode === "photo" && <Camera className="w-6 h-6 text-black animate-in fade-in zoom-in duration-300" />}
+              {/* --- TOP ROW --- */}
+              <div className="flex justify-between items-start">
+                <span
+                  className={`text-[10px] font-medium uppercase tracking-widest opacity-60 ${card.textColor}`}
+                >
+                  {card.name}
+                </span>
+                <Plus size={14} className={`opacity-40 ${card.textColor}`} />
+              </div>
+
+              {/* --- MIDDLE (HERO) --- */}
+              <div className={`flex flex-col justify-center ${card.font}`}>
+                <h2
+                  className={`text-2xl md:text-3xl leading-[0.9] ${card.textColor}`}
+                >
+                  {card.role}
+                </h2>
+                <h2
+                  className={`text-2xl md:text-3xl leading-[0.9] opacity-80 ${card.textColor}`}
+                >
+                  {card.subRole}
+                </h2>
+              </div>
+
+              {/* --- BOTTOM ROW --- */}
+              <div className="flex justify-between items-end border-t border-current border-opacity-10 pt-4">
+                <div className="flex flex-col">
+                  <span className={`text-[11px] ${card.secondaryColor}`}>
+                    {card.tagline}
+                  </span>
+                  <span
+                    className={`text-[10px] opacity-50 mt-1 ${card.textColor}`}
+                  >
+                    {card.contact}
+                  </span>
+                </div>
+
+                {/* Minimal Action Button */}
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleNavigation(card.link);
+                  }}
+                  className={`p-2 rounded-full border border-current opacity-60 hover:opacity-100 transition-opacity ${card.textColor}`}
+                >
+                  <ArrowUpRight size={16} />
+                </motion.button>
+              </div>
             </motion.div>
-        </div>
+          );
+        })}
       </div>
     </main>
   );
