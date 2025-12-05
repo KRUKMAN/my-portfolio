@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -9,13 +9,13 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { PageSelector } from "./components/PageSelector";
 import { cards as initialCards, Card } from "./data/cards";
 
 export default function HomeClient() {
   const [cards, setCards] = useState<Card[]>(initialCards);
   const [isGrid, setIsGrid] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
+  const stackRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
 
   const cycleStack = useCallback(
@@ -55,26 +55,35 @@ export default function HomeClient() {
       if (isGrid) return;
       if (Math.abs(e.deltaY) > 20) {
         cycleStack(e.deltaY > 0 ? "next" : "prev");
-        e.preventDefault();
-      } else {
+        if (e.cancelable) e.preventDefault();
+      } else if (e.cancelable) {
         e.preventDefault();
       }
     };
 
+    const target = stackRef.current ?? window;
+
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("wheel", handleWheel, { passive: false });
+    target.addEventListener("wheel", handleWheel, { passive: false });
     let startY = 0;
     let startX = 0;
+    let moved = false;
     const handleTouchStart = (e: TouchEvent) => {
       if (isGrid) return;
       const touch = e.touches[0];
       startY = touch.clientY;
       startX = touch.clientX;
-      e.preventDefault();
+      moved = false;
     };
     const handleTouchMove = (e: TouchEvent) => {
       if (isGrid) return;
-      e.preventDefault();
+      const touch = e.touches[0];
+      const deltaY = touch.clientY - startY;
+      const deltaX = touch.clientX - startX;
+      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) {
+        moved = true;
+        if (e.cancelable) e.preventDefault();
+      }
     };
     const handleTouchEnd = (e: TouchEvent) => {
       if (isGrid) return;
@@ -84,24 +93,24 @@ export default function HomeClient() {
       if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 30) {
         cycleStack(deltaY > 0 ? "next" : "prev");
       }
-      e.preventDefault();
+      if (moved && e.cancelable) e.preventDefault();
     };
-    window.addEventListener("touchstart", handleTouchStart, { passive: false });
-    window.addEventListener("touchmove", handleTouchMove, { passive: false });
-    window.addEventListener("touchend", handleTouchEnd, { passive: false });
+    target.addEventListener("touchstart", handleTouchStart, { passive: false });
+    target.addEventListener("touchmove", handleTouchMove, { passive: false });
+    target.addEventListener("touchend", handleTouchEnd, { passive: false });
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
+      target.removeEventListener("wheel", handleWheel);
+      target.removeEventListener("touchstart", handleTouchStart);
+      target.removeEventListener("touchmove", handleTouchMove);
+      target.removeEventListener("touchend", handleTouchEnd);
     };
   }, [cycleStack, isGrid]);
 
   const activeCardId = cards[0].id;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#0f1115] to-[#090a0f] flex flex-col items-center justify-center px-6 py-16 text-white relative transition-colors">
+    <main className="min-h-screen bg-gradient-to-b from-[#0f1115] to-[#090a0f] flex flex-col items-center justify-start md:justify-center px-6 pt-10 pb-16 md:py-16 text-white relative transition-colors">
       {/* --- TOP CONTROLS --- */}
       <div className="absolute top-8 left-0 right-0 px-8 flex justify-start items-start max-w-5xl mx-auto w-full z-20">
         <div className="text-left">
@@ -116,15 +125,29 @@ export default function HomeClient() {
         <p className="text-sm sm:text-base tracking-[0.18em] uppercase text-white/60">
           {isGrid ? "Select a persona" : "Which Jake do you want today?"}
         </p>
+        {!isGrid && (
+          <div className="mt-4 flex items-center justify-center gap-3 md:hidden">
+            {initialCards.map((c) => (
+              <motion.div
+                key={`mobile-${c.id}`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  activeCardId === c.id
+                    ? "bg-white scale-125 opacity-100"
+                    : "bg-white/20 scale-100 opacity-50"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
-
-      <PageSelector contextLabel="Portfolio" />
 
       {/* --- CARDS CONTAINER --- */}
       <div
         className={`relative w-full transition-all duration-500 ease-in-out ${
           isGrid ? "max-w-5xl" : "max-w-[500px] aspect-[1.45/1] perspective-1000"
         }`}
+        ref={stackRef}
+        data-testid="stack-container"
       >
         <div
           className={

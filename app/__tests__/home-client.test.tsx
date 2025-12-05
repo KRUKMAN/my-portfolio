@@ -51,20 +51,25 @@ describe("HomeClient", () => {
   it("cycles the stack on wheel and prevents page scroll", async () => {
     render(<HomeClient />);
 
-    const initialTop = document.querySelectorAll('[data-testid^="card-"]')[0];
+    const initialTop = document.querySelectorAll(
+      '[data-testid^="card-"]:not([data-testid="stack-container"])'
+    )[0];
     expect(initialTop).toHaveAttribute("data-testid", "card-consulting");
 
+    const stack = screen.getByTestId("stack-container");
     const wheelEvent = new WheelEvent("wheel", {
       deltaY: 40,
       cancelable: true,
     });
     const preventSpy = vi.spyOn(wheelEvent, "preventDefault");
     await act(async () => {
-      window.dispatchEvent(wheelEvent);
+      stack.dispatchEvent(wheelEvent);
     });
 
     await waitFor(() => {
-      const afterTop = document.querySelectorAll('[data-testid^="card-"]')[0];
+      const afterTop = document.querySelectorAll(
+        '[data-testid^="card-"]:not([data-testid="stack-container"])'
+      )[0];
       expect(afterTop).toHaveAttribute("data-testid", "card-ai");
     });
     expect(preventSpy).toHaveBeenCalled();
