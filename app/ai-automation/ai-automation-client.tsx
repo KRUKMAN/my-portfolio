@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -17,7 +17,7 @@ import { PageSelector } from "../components/PageSelector";
 type Capability = {
   title: string;
   desc: string;
-  icon: JSX.Element;
+  icon: ReactNode;
 };
 
 const capabilities: Capability[] = [
