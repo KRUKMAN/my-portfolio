@@ -14,15 +14,15 @@ import { cards as initialCards, Card } from "./data/cards";
 export default function HomeClient() {
   const [cards, setCards] = useState<Card[]>(initialCards);
   const [isGrid, setIsGrid] = useState(false);
-  const [isToggling, setIsToggling] = useState(false);
+  const isToggling = useRef(false);
   const stackRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
 
   const cycleStack = useCallback(
     (direction: "next" | "prev") => {
-      if (isGrid || isToggling) return;
+      if (isGrid || isToggling.current) return;
 
-      setIsToggling(true);
+      isToggling.current = true;
       setCards((prevCards) => {
         const updated = [...prevCards];
         if (direction === "next") {
@@ -35,9 +35,11 @@ export default function HomeClient() {
         return updated;
       });
 
-      setTimeout(() => setIsToggling(false), 400);
+      setTimeout(() => {
+        isToggling.current = false;
+      }, 400);
     },
-    [isGrid, isToggling]
+    [isGrid]
   );
 
   const handleNavigation = (link: string) => {
