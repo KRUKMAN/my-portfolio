@@ -60,9 +60,30 @@ export default function HomeClient() {
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("wheel", handleWheel);
+    let startY = 0;
+    let startX = 0;
+    const handleTouchStart = (e: TouchEvent) => {
+      if (isGrid) return;
+      const touch = e.touches[0];
+      startY = touch.clientY;
+      startX = touch.clientX;
+    };
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (isGrid) return;
+      const touch = e.changedTouches[0];
+      const deltaY = touch.clientY - startY;
+      const deltaX = touch.clientX - startX;
+      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 30) {
+        cycleStack(deltaY > 0 ? "next" : "prev");
+      }
+    };
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
     };
   }, [cycleStack, isGrid]);
 
