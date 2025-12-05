@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft,
   Bot,
+  ChevronDown,
   ChevronRight,
   Cpu,
   Network,
@@ -12,7 +13,6 @@ import {
   Workflow,
 } from "lucide-react";
 import Link from "next/link";
-import { PageSelector } from "../components/PageSelector";
 
 type Capability = {
   title: string;
@@ -40,6 +40,7 @@ const capabilities: Capability[] = [
 
 export default function AIAutomationClient() {
   const [typedText, setTypedText] = useState("");
+  const [navOpen, setNavOpen] = useState(false);
   const fullText =
     `> Initializing System...\n` +
     `> Connecting to CRM...\n` +
@@ -61,22 +62,52 @@ export default function AIAutomationClient() {
     return () => clearInterval(typing);
   }, [fullText]);
 
-  return (
-    <main className="min-h-screen bg-[#050505] text-white p-6 selection:bg-green-500/30 pb-32">
-      <nav className="flex justify-between items-center mb-20 max-w-7xl mx-auto">
-        <Link
-          href="/"
-          className="group flex items-center gap-2 text-sm font-medium text-white/40 hover:text-white transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span>Home</span>
-        </Link>
-        <div className="text-xs uppercase tracking-[0.2em] text-white/30">
-          AI Architecture
-        </div>
-      </nav>
+  const navPages = [
+    { href: "/consulting", label: "Consulting" },
+    { href: "/ai-automation", label: "AI / Automation" },
+    { href: "/photography", label: "Photography" },
+    { href: "/art", label: "Street / Art" },
+  ];
 
-      <PageSelector contextLabel="AI / Automation" />
+  return (
+    <main className="relative min-h-screen bg-[#050505] text-white p-6 md:px-10 selection:bg-green-500/30 pb-32 pt-20">
+      <div className="absolute top-6 left-0 right-0 px-6 md:px-10">
+        <div className="max-w-7xl mx-auto flex items-center justify-between text-xs uppercase tracking-[0.2em] text-white/50">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="group flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span>Home</span>
+            </Link>
+            <div className="relative">
+              <button
+                onClick={() => setNavOpen((o) => !o)}
+                className="group flex items-center gap-1 px-2 py-1 rounded-full text-white/70 hover:text-white transition-colors"
+              >
+                <span>AI / Automation</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${navOpen ? "rotate-180" : ""}`} />
+                <span className="absolute inset-0 rounded-full border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden />
+              </button>
+              {navOpen && (
+                <div className="absolute left-0 mt-2 w-44 rounded-xl bg-black/85 border border-white/10 backdrop-blur shadow-[0_15px_40px_rgba(0,0,0,0.4)] p-2 z-50">
+                  {navPages.map((page) => (
+                    <Link
+                      key={page.href}
+                      href={page.href}
+                      onClick={() => setNavOpen(false)}
+                      className="block px-3 py-2 rounded-lg text-[11px] uppercase tracking-[0.18em] text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                    >
+                      {page.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <section className="max-w-7xl mx-auto mb-32 grid lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-8">

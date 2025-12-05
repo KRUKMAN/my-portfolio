@@ -274,22 +274,23 @@ export default function HomeClient() {
           </div>
         )}
 
-        {/* --- STACK INDICATORS (Only visible in Stack Mode) --- */}
-        {!isGrid && (
-          <div className="absolute -left-12 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-20 hidden md:flex">
-            {initialCards.map((c) => (
-              <motion.div
-                key={c.id}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  activeCardId === c.id
-                    ? "bg-white scale-125 opacity-100"
-                    : "bg-white/20 scale-100 opacity-50"
-                }`}
-              />
-            ))}
-          </div>
-        )}
       </div>
+
+      {/* --- STACK INDICATORS (Only visible in Stack Mode, desktop) --- */}
+      {!isGrid && (
+        <div className="mt-6 hidden md:flex items-center justify-center gap-3 z-20">
+          {initialCards.map((c) => (
+            <motion.div
+              key={c.id}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                activeCardId === c.id
+                  ? "bg-white scale-125 opacity-100"
+                  : "bg-white/20 scale-100 opacity-50"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </main>
   );
 }
