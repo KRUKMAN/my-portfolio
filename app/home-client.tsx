@@ -55,11 +55,14 @@ export default function HomeClient() {
       if (isGrid) return;
       if (Math.abs(e.deltaY) > 20) {
         cycleStack(e.deltaY > 0 ? "next" : "prev");
+        e.preventDefault();
+      } else {
+        e.preventDefault();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("wheel", handleWheel);
+    window.addEventListener("wheel", handleWheel, { passive: false });
     let startY = 0;
     let startX = 0;
     const handleTouchStart = (e: TouchEvent) => {
@@ -67,6 +70,11 @@ export default function HomeClient() {
       const touch = e.touches[0];
       startY = touch.clientY;
       startX = touch.clientX;
+      e.preventDefault();
+    };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isGrid) return;
+      e.preventDefault();
     };
     const handleTouchEnd = (e: TouchEvent) => {
       if (isGrid) return;
@@ -76,13 +84,16 @@ export default function HomeClient() {
       if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 30) {
         cycleStack(deltaY > 0 ? "next" : "prev");
       }
+      e.preventDefault();
     };
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
-    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: false });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd, { passive: false });
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchend", handleTouchEnd);
     };
   }, [cycleStack, isGrid]);
@@ -124,6 +135,7 @@ export default function HomeClient() {
             <motion.div
               key={card.id}
               layoutId={card.id}
+              data-testid={`card-${card.id}`}
               onClick={() => {
                 setIsGrid((prev) => !prev);
               }}
