@@ -10,6 +10,7 @@ import { artworks } from "../data/art";
 export default function ArtClient() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [navOpen, setNavOpen] = useState(false);
+  const navRef = useRef<HTMLDivElement | null>(null);
 
   const navPages = [
     { href: "/consulting", label: "Consulting" },
@@ -17,6 +18,25 @@ export default function ArtClient() {
     { href: "/photography", label: "Photography" },
     { href: "/art", label: "Street / Art" },
   ];
+
+  useEffect(() => {
+    const handleClickAway = (event: MouseEvent | TouchEvent) => {
+      if (!navRef.current) return;
+      if (navRef.current.contains(event.target as Node)) return;
+      setNavOpen(false);
+    };
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setNavOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickAway);
+    document.addEventListener("touchstart", handleClickAway);
+    document.addEventListener("keydown", handleEsc);
+    return () => {
+      document.removeEventListener("mousedown", handleClickAway);
+      document.removeEventListener("touchstart", handleClickAway);
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, []);
 
   return (
     <main className="relative min-h-screen bg-[#080808] text-white p-6 md:px-10 selection:bg-purple-500/30 pb-32 pt-20">
@@ -31,10 +51,12 @@ export default function ArtClient() {
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Home</span>
             </Link>
-            <div className="relative">
+            <div className="relative" ref={navRef}>
               <button
                 onClick={() => setNavOpen((o) => !o)}
                 className="group flex items-center gap-1 px-2 py-1 rounded-full text-white/70 hover:text-white transition-colors"
+                aria-expanded={navOpen}
+                aria-haspopup="true"
               >
                 <span>Street / Art</span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${navOpen ? "rotate-180" : ""}`} />

@@ -244,7 +244,7 @@ export default function HomeClient() {
                     e.stopPropagation();
                     handleNavigation(card.link);
                   }}
-                  className={`inline-flex items-center gap-2 rounded-full border border-current px-4 py-2 text-sm font-medium opacity-70 hover:opacity-100 transition-all ${card.textColor}`}
+                  className={`inline-flex h-10 items-center gap-2 rounded-full border border-current px-4 text-sm font-medium leading-none whitespace-nowrap opacity-70 hover:opacity-100 transition-all ${card.textColor}`}
                 >
                   <span>Learn more</span>
                   <ArrowUpRight size={16} />

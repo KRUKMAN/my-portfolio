@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -41,6 +41,7 @@ const capabilities: Capability[] = [
 export default function AIAutomationClient() {
   const [typedText, setTypedText] = useState("");
   const [navOpen, setNavOpen] = useState(false);
+  const navRef = useRef<HTMLDivElement | null>(null);
   const fullText =
     `> Initializing System...\n` +
     `> Connecting to CRM...\n` +
@@ -69,6 +70,25 @@ export default function AIAutomationClient() {
     { href: "/art", label: "Street / Art" },
   ];
 
+  useEffect(() => {
+    const handleClickAway = (event: MouseEvent | TouchEvent) => {
+      if (!navRef.current) return;
+      if (navRef.current.contains(event.target as Node)) return;
+      setNavOpen(false);
+    };
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setNavOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickAway);
+    document.addEventListener("touchstart", handleClickAway);
+    document.addEventListener("keydown", handleEsc);
+    return () => {
+      document.removeEventListener("mousedown", handleClickAway);
+      document.removeEventListener("touchstart", handleClickAway);
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, []);
+
   return (
     <main className="relative min-h-screen bg-[#050505] text-white p-6 md:px-10 selection:bg-green-500/30 pb-32 pt-20">
       <div className="absolute top-6 left-0 right-0 px-6 md:px-10">
@@ -81,17 +101,19 @@ export default function AIAutomationClient() {
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Home</span>
             </Link>
-            <div className="relative">
+            <div className="relative" ref={navRef}>
               <button
                 onClick={() => setNavOpen((o) => !o)}
                 className="group flex items-center gap-1 px-2 py-1 rounded-full text-white/70 hover:text-white transition-colors"
+                aria-expanded={navOpen}
+                aria-haspopup="true"
               >
                 <span>AI / Automation</span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${navOpen ? "rotate-180" : ""}`} />
                 <span className="absolute inset-0 rounded-full border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden />
               </button>
               {navOpen && (
-                <div className="absolute left-0 mt-2 w-44 rounded-xl bg-black/85 border border-white/10 backdrop-blur shadow-[0_15px_40px_rgba(0,0,0,0.4)] p-2 z-50">
+                <div className="absolute left-0 mt-2 w-48 sm:w-56 min-w-[11rem] rounded-xl bg-black/90 border border-white/10 backdrop-blur shadow-[0_15px_40px_rgba(0,0,0,0.4)] p-2 z-50">
                   {navPages.map((page) => (
                     <Link
                       key={page.href}

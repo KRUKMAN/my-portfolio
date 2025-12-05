@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, X, Camera, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import { photos } from "../data/photos";
 export default function PhotographyClient() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [navOpen, setNavOpen] = useState(false);
+  const navRef = useRef<HTMLDivElement | null>(null);
 
   // --- NAVIGATION LOGIC ---
   const handleNext = useCallback((e?: React.MouseEvent) => {
@@ -51,6 +52,25 @@ export default function PhotographyClient() {
     { href: "/art", label: "Street / Art" },
   ];
 
+  useEffect(() => {
+    const handleClickAway = (event: MouseEvent | TouchEvent) => {
+      if (!navRef.current) return;
+      if (navRef.current.contains(event.target as Node)) return;
+      setNavOpen(false);
+    };
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setNavOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickAway);
+    document.addEventListener("touchstart", handleClickAway);
+    document.addEventListener("keydown", handleEsc);
+    return () => {
+      document.removeEventListener("mousedown", handleClickAway);
+      document.removeEventListener("touchstart", handleClickAway);
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, []);
+
   return (
     <main className="relative min-h-screen bg-[#0a0a0a] text-white selection:bg-white/20 pb-32">
       
@@ -65,10 +85,12 @@ export default function PhotographyClient() {
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
               <span>Home</span>
             </Link>
-            <div className="relative">
+            <div className="relative" ref={navRef}>
               <button
                 onClick={() => setNavOpen((o) => !o)}
                 className="group flex items-center gap-1 px-2 py-1 rounded-full text-white/70 hover:text-white transition-colors"
+                aria-expanded={navOpen}
+                aria-haspopup="true"
               >
                 <span>Photography</span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${navOpen ? "rotate-180" : ""}`} />
