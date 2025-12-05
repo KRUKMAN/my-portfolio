@@ -144,20 +144,6 @@ export default function HomeClient() {
         <p className="text-sm sm:text-base tracking-[0.18em] uppercase text-white/60">
           {isGrid ? "Select a persona" : "Which Jake do you want today?"}
         </p>
-        {!isGrid && (
-          <div className="mt-4 flex items-center justify-center gap-3 md:hidden">
-            {initialCards.map((c) => (
-              <motion.div
-                key={`mobile-${c.id}`}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  activeCardId === c.id
-                    ? "bg-white scale-125 opacity-100"
-                    : "bg-white/20 scale-100 opacity-50"
-                }`}
-              />
-            ))}
-          </div>
-        )}
       </div>
 
       {/* --- CARDS CONTAINER --- */}
@@ -270,34 +256,49 @@ export default function HomeClient() {
           })}
         </div>
 
-        {/* --- STACK CONTROLS (Floating Arrows) --- */}
+        {/* --- STACK CONTROLS & INDICATORS (Desktop) --- */}
         {!isGrid && (
-          <div className="absolute -right-12 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-20 hidden md:flex">
-            <button
-              onClick={() => cycleStack("prev")}
-              className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all animate-bounce"
-              style={{ animationDuration: "2s" }}
-            >
-              <ChevronUp size={20} />
-            </button>
-            <button
-              onClick={() => cycleStack("next")}
-              className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all animate-bounce"
-              style={{ animationDuration: "2s", animationDelay: "0.1s" }}
-            >
-              <ChevronDown size={20} />
-            </button>
-          </div>
+          <>
+            <div className="absolute -right-12 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-20 hidden md:flex">
+              <button
+                onClick={() => cycleStack("prev")}
+                className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all animate-bounce"
+                style={{ animationDuration: "2s" }}
+              >
+                <ChevronUp size={20} />
+              </button>
+              <button
+                onClick={() => cycleStack("next")}
+                className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all animate-bounce"
+                style={{ animationDuration: "2s", animationDelay: "0.1s" }}
+              >
+                <ChevronDown size={20} />
+              </button>
+            </div>
+
+            <div className="absolute -left-12 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-3 z-20">
+              {initialCards.map((c) => (
+                <motion.div
+                  key={`desktop-${c.id}`}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    activeCardId === c.id
+                      ? "bg-white scale-125 opacity-100"
+                      : "bg-white/20 scale-100 opacity-50"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
         )}
 
       </div>
 
-      {/* --- STACK INDICATORS (Only visible in Stack Mode, desktop) --- */}
+      {/* --- STACK INDICATORS (Mobile, below cards) --- */}
       {!isGrid && (
-        <div className="mt-8 hidden md:flex items-center justify-center gap-3 z-20">
+        <div className="mt-6 flex items-center justify-center gap-3 md:hidden">
           {initialCards.map((c) => (
             <motion.div
-              key={c.id}
+              key={`mobile-${c.id}`}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 activeCardId === c.id
                   ? "bg-white scale-125 opacity-100"
