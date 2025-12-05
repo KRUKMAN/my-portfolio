@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Database, Mail, User, Zap, BarChart, RefreshCw, Settings2, Target, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef, useCallback, type ReactNode } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, CheckCircle2, Database, Mail, User, Zap, RefreshCw, Settings2, Target, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 export default function ConsultingClient() {
@@ -10,21 +10,21 @@ export default function ConsultingClient() {
   const [navOpen, setNavOpen] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
 
+  const runSimulation = useCallback(() => {
+    setPipelineStep(1);
+    setTimeout(() => setPipelineStep(2), 1000);
+    setTimeout(() => setPipelineStep(3), 2500);
+    setTimeout(() => setPipelineStep(4), 4000);
+    setTimeout(() => setPipelineStep(0), 6000);
+  }, []);
+
   // Auto-run the simulation every few seconds
   useEffect(() => {
     const interval = setInterval(() => {
       runSimulation();
     }, 8000);
     return () => clearInterval(interval);
-  }, []);
-
-  const runSimulation = () => {
-    setPipelineStep(1); 
-    setTimeout(() => setPipelineStep(2), 1000); 
-    setTimeout(() => setPipelineStep(3), 2500); 
-    setTimeout(() => setPipelineStep(4), 4000); 
-    setTimeout(() => setPipelineStep(0), 6000); 
-  };
+  }, [runSimulation]);
 
   const navPages = [
     { href: "/consulting", label: "Consulting" },
@@ -110,7 +110,7 @@ export default function ConsultingClient() {
             <span className="text-slate-500">Removing Friction.</span>
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-            I don't just manage sales tools; I architect the ecosystems that make revenue predictable. 
+            I don&apos;t just manage sales tools; I architect the ecosystems that make revenue predictable. 
             From Hubspot automations to custom API integrations.
           </p>
         </motion.div>
@@ -127,7 +127,7 @@ export default function ConsultingClient() {
                 Live Workflow Demo
               </h3>
               <p className="text-slate-400">
-                See how I structure data flows. Click the button to simulate a "New Lead" entering the CRM system.
+                See how I structure data flows. Click the button to simulate a &quot;New Lead&quot; entering the CRM system.
               </p>
               
               <button 
@@ -165,7 +165,15 @@ export default function ConsultingClient() {
   );
 }
 
-function PipelineNode({ active, icon, label, sub, color }: any) {
+type PipelineNodeProps = {
+  active: boolean;
+  icon: ReactNode;
+  label: string;
+  sub: string;
+  color: string;
+};
+
+function PipelineNode({ active, icon, label, sub, color }: PipelineNodeProps) {
     return (
         <div className={`flex items-center gap-4 p-3 rounded-lg border transition-all duration-500 ${active ? 'bg-slate-800 border-slate-600 opacity-100' : 'bg-slate-900 border-transparent opacity-30'}`}>
             <div className={`p-2 rounded-md bg-slate-950 ${color}`}>{icon}</div>
@@ -181,7 +189,7 @@ function Connector({ active }: { active: boolean }) {
     )
 }
 
-function ServiceCard({ title, desc, icon }: { title: string, desc: string, icon: React.ReactNode }) {
+function ServiceCard({ title, desc, icon }: { title: string, desc: string, icon: ReactNode }) {
     return (
         <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-600 transition-colors group">
             <div className="flex items-center gap-2 text-white mb-2">

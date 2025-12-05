@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, X, Camera, MapPin, Aperture, Timer, Mountain, ScanFace, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { artworks } from "../data/art";
 
 export default function ArtClient() {

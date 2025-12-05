@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, X, Camera, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { photos } from "../data/photos";
 
 export default function PhotographyClient() {
@@ -172,7 +171,7 @@ export default function PhotographyClient() {
                 <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 flex justify-between items-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <div className="text-left">
                     <h3 className="text-xl font-serif italic text-white mb-1">{photo.title}</h3>
-                    <p className="text-[10px] uppercase tracking-widest text-white/60">{photo.location} ƒ?" {photo.year}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-white/60">{`${photo.location} - ${photo.year}`}</p>
                   </div>
                 </div>
 
