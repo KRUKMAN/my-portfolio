@@ -51,7 +51,8 @@ export default function HomeClient() {
       if (e.key === "ArrowUp" || e.key === "ArrowLeft") cycleStack("prev");
     };
 
-    const handleWheel = (e: WheelEvent) => {
+    const handleWheel = (event: Event) => {
+      const e = event as WheelEvent;
       if (isGrid) return;
       if (Math.abs(e.deltaY) > 20) {
         cycleStack(e.deltaY > 0 ? "next" : "prev");
@@ -68,14 +69,16 @@ export default function HomeClient() {
     let startY = 0;
     let startX = 0;
     let moved = false;
-    const handleTouchStart = (e: TouchEvent) => {
+    const handleTouchStart = (event: Event) => {
+      const e = event as TouchEvent;
       if (isGrid) return;
       const touch = e.touches[0];
       startY = touch.clientY;
       startX = touch.clientX;
       moved = false;
     };
-    const handleTouchMove = (e: TouchEvent) => {
+    const handleTouchMove = (event: Event) => {
+      const e = event as TouchEvent;
       if (isGrid) return;
       const touch = e.touches[0];
       const deltaY = touch.clientY - startY;
@@ -85,7 +88,8 @@ export default function HomeClient() {
         if (e.cancelable) e.preventDefault();
       }
     };
-    const handleTouchEnd = (e: TouchEvent) => {
+    const handleTouchEnd = (event: Event) => {
+      const e = event as TouchEvent;
       if (isGrid) return;
       const touch = e.changedTouches[0];
       const deltaY = touch.clientY - startY;
