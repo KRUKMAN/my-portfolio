@@ -10,7 +10,7 @@ const securityHeaders = [
       // Allow dev tooling (inline/eval/ws/blob) in development to unblock Next/Turbopack
       isDev
         ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:"
-        : "script-src 'self'",
+        : "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data:",
       "font-src 'self'",
