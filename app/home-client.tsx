@@ -62,10 +62,12 @@ export default function HomeClient() {
       }
     };
 
-    const target = stackRef.current ?? window;
-
     window.addEventListener("keydown", handleKeyDown);
-    target.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    const target = stackRef.current;
+    if (target) {
+      target.addEventListener("wheel", handleWheel, { passive: false });
+    }
     let startY = 0;
     let startX = 0;
     let moved = false;
@@ -99,15 +101,26 @@ export default function HomeClient() {
       }
       if (moved && e.cancelable) e.preventDefault();
     };
-    target.addEventListener("touchstart", handleTouchStart, { passive: false });
-    target.addEventListener("touchmove", handleTouchMove, { passive: false });
-    target.addEventListener("touchend", handleTouchEnd, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: false });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd, { passive: false });
+    if (target) {
+      target.addEventListener("touchstart", handleTouchStart, { passive: false });
+      target.addEventListener("touchmove", handleTouchMove, { passive: false });
+      target.addEventListener("touchend", handleTouchEnd, { passive: false });
+    }
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      target.removeEventListener("wheel", handleWheel);
-      target.removeEventListener("touchstart", handleTouchStart);
-      target.removeEventListener("touchmove", handleTouchMove);
-      target.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      if (target) {
+        target.removeEventListener("wheel", handleWheel);
+        target.removeEventListener("touchstart", handleTouchStart);
+        target.removeEventListener("touchmove", handleTouchMove);
+        target.removeEventListener("touchend", handleTouchEnd);
+      }
     };
   }, [cycleStack, isGrid]);
 
@@ -158,100 +171,101 @@ export default function HomeClient() {
             isGrid ? "grid grid-cols-1 md:grid-cols-2 gap-4" : "relative w-full h-full"
           }
         >
-          {cards.map((card, index) => (
-            <motion.div
-              key={card.id}
-              layoutId={card.id}
-              data-testid={`card-${card.id}`}
-              onClick={() => {
-                setIsGrid((prev) => !prev);
-              }}
-              initial={false}
-              animate={
-                isGrid
-                  ? {
-                      scale: 1,
-                      y: 0,
-                      x: 0,
-                      rotate: 0,
-                      zIndex: 1,
-                      filter: "brightness(1)",
-                      opacity: 1,
-                    }
-                  : {
-                      scale: 1 - index * 0.02,
-                      y: index * 40,
-                      x: 0,
-                      rotate: index === 0 ? 0 : index % 2 === 0 ? 1 : -1,
-                      zIndex: cards.length - index,
-                      filter: index === 0 ? "brightness(1)" : "brightness(0.7)",
-                    }
-              }
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              className={`
-                ${
+          {cards.map((card, index) => {
+            const stackAnimation = {
+              scale: 1 - index * 0.02,
+              y: index * 40,
+              x: 0,
+              rotate: index === 0 ? 0 : index % 2 === 0 ? 1 : -1,
+              zIndex: cards.length - index,
+              filter: index === 0 ? "brightness(1)" : "brightness(0.7)",
+              opacity: 1,
+            };
+
+            const gridAnimation = {
+              scale: 1,
+              y: 0,
+              x: 0,
+              rotate: 0,
+              zIndex: 1,
+              filter: "brightness(1)",
+              opacity: 1,
+            };
+
+            const animation = isGrid ? gridAnimation : stackAnimation;
+
+            return (
+              <motion.div
+                key={card.id}
+                layoutId={card.id}
+                data-testid={`card-${card.id}`}
+                onClick={() => {
+                  setIsGrid((prev) => !prev);
+                }}
+                initial={animation}
+                animate={animation}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                className={`${
                   isGrid
                     ? "relative h-[280px] w-full"
                     : "absolute top-0 left-0 w-full h-full"
-                }
-                rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.12)] overflow-hidden cursor-pointer 
-                ${card.theme} flex flex-col justify-between p-7 md:p-10 
-                transition-shadow duration-300 hover:shadow-[0_22px_48px_rgba(0,0,0,0.18)]
-                ${!isGrid && index === 0 ? "hover:scale-[1.02]" : ""} 
-              `}
-            >
-              {/* --- CARD TOP --- */}
-              <div className="flex justify-between items-start">
-                <span
-                  className={`text-[10px] font-medium uppercase tracking-widest opacity-60 ${card.textColor}`}
-                >
-                  {card.name}
-                </span>
-                <Plus size={14} className={`opacity-40 ${card.textColor}`} />
-              </div>
+                } rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.12)] overflow-hidden cursor-pointer ${card.theme} flex flex-col justify-between p-7 md:p-10 transition-shadow duration-300 hover:shadow-[0_22px_48px_rgba(0,0,0,0.18)] ${
+                  !isGrid && index === 0 ? "hover:scale-[1.02]" : ""
+                }`}
+              >
+                {/* --- CARD TOP --- */}
+                <div className="flex justify-between items-start">
+                  <span
+                    className={`text-[10px] font-medium uppercase tracking-widest opacity-60 ${card.textColor}`}
+                  >
+                    {card.name}
+                  </span>
+                  <Plus size={14} className={`opacity-40 ${card.textColor}`} />
+                </div>
 
-              {/* --- CARD HERO --- */}
-              <div className={`flex flex-col justify-center ${card.font}`}>
-                <h2
-                  className={`text-2xl md:text-3xl leading-[0.9] ${card.textColor}`}
-                >
-                  {card.role}
-                </h2>
-                <h2
-                  className={`text-2xl md:text-3xl leading-[0.9] opacity-80 ${card.textColor}`}
-                >
-                  {card.subRole}
-                </h2>
+                {/* --- CARD HERO --- */}
+                <div className={`flex flex-col justify-center ${card.font}`}>
+                  <h2
+                    className={`text-2xl md:text-3xl leading-[0.9] ${card.textColor}`}
+                  >
+                    {card.role}
+                  </h2>
+                  <h2
+                    className={`text-2xl md:text-3xl leading-[0.9] opacity-80 ${card.textColor}`}
+                  >
+                    {card.subRole}
+                  </h2>
                 </div>
 
                 {/* --- CARD BOTTOM --- */}
                 <div className="flex justify-between items-end border-t border-current border-opacity-10 pt-4">
                   <div className="flex flex-col">
-                  <span className={`text-[11px] ${card.secondaryColor}`}>
-                    {card.tagline}
-                  </span>
-                  <span
-                    className={`text-[10px] opacity-50 mt-1 ${card.textColor}`}
-                  >
-                    {isGrid ? "Click to visit" : ""}
-                  </span>
-                </div>
+                    <span className={`text-[11px] ${card.secondaryColor}`}>
+                      {card.tagline}
+                    </span>
+                    <span
+                      className={`text-[10px] opacity-50 mt-1 ${card.textColor}`}
+                    >
+                      {isGrid ? "Click to visit" : ""}
+                    </span>
+                  </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleNavigation(card.link);
-                  }}
-                  className={`inline-flex h-10 items-center gap-2 rounded-full border border-current px-4 text-sm font-medium leading-none whitespace-nowrap opacity-70 hover:opacity-100 transition-all ${card.textColor}`}
-                >
-                  <span>Learn more</span>
-                  <ArrowUpRight size={16} />
-                </motion.button>
-              </div>
-            </motion.div>
-          ))}
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigation(card.link);
+                    }}
+                    className={`inline-flex h-10 items-center gap-2 rounded-full border border-current px-4 text-sm font-medium leading-none whitespace-nowrap opacity-70 hover:opacity-100 transition-all ${card.textColor}`}
+                  >
+                    <span>Learn more</span>
+                    <ArrowUpRight size={16} />
+                  </motion.button>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* --- STACK CONTROLS (Floating Arrows) --- */}
@@ -278,7 +292,7 @@ export default function HomeClient() {
 
       {/* --- STACK INDICATORS (Only visible in Stack Mode, desktop) --- */}
       {!isGrid && (
-        <div className="mt-6 hidden md:flex items-center justify-center gap-3 z-20">
+        <div className="mt-8 hidden md:flex items-center justify-center gap-3 z-20">
           {initialCards.map((c) => (
             <motion.div
               key={c.id}

@@ -22,7 +22,9 @@ export function ContactModal({ open, onClose, contextLabel = "General" }: Contac
 
   if (!open) return null;
 
-  const mailtoHref = `mailto:hello@jakub.com?subject=${encodeURIComponent(
+  const encodedEmail = "aGVsbG9AamFrdWIuY29t"; // base64 for hello@jakub.com
+  const emailAddress = typeof window !== "undefined" ? atob(encodedEmail) : "mailto";
+  const mailtoHref = `mailto:${emailAddress}?subject=${encodeURIComponent(
     subject
   )}&body=${encodeURIComponent(`${message}\n\n${name} | ${email}`)}`;
 
