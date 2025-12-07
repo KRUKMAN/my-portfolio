@@ -39,7 +39,7 @@ export default function HomeClient() {
 
   const handleNavigation = (link: string) => {
     if (link.startsWith("http")) {
-      window.location.href = link;
+      window.location.assign(link);
       return;
     }
 
