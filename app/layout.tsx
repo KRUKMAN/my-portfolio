@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Jakub Krukowski | Portfolio",
-  description: "Consulting, automation, and photography by Jakub Krukowski.",
+  description: "Consulting, ops-as-a-service, and photography by Jakub Krukowski.",
 };
 
 export default function RootLayout({

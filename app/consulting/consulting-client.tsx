@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, type ReactNode } from "react"
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, Database, Mail, User, Zap, RefreshCw, Settings2, Target, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import { portfolioPages } from "../data/navigation";
 
 export default function ConsultingClient() {
   const [pipelineStep, setPipelineStep] = useState(0);
@@ -25,13 +26,6 @@ export default function ConsultingClient() {
     }, 8000);
     return () => clearInterval(interval);
   }, [runSimulation]);
-
-  const navPages = [
-    { href: "/consulting", label: "Consulting" },
-    { href: "/ai-automation", label: "AI / Automation" },
-    { href: "/photography", label: "Photography" },
-    { href: "/art", label: "Street / Art" },
-  ];
 
   useEffect(() => {
     const handleClickAway = (event: MouseEvent | TouchEvent) => {
@@ -78,16 +72,36 @@ export default function ConsultingClient() {
               </button>
               {navOpen && (
                 <div className="absolute left-0 mt-2 w-48 sm:w-56 min-w-[11rem] rounded-xl bg-black/90 border border-white/10 backdrop-blur shadow-[0_15px_40px_rgba(0,0,0,0.4)] p-2 z-50">
-                  {navPages.map((page) => (
-                    <Link
-                      key={page.href}
-                      href={page.href}
-                      onClick={() => setNavOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-[11px] uppercase tracking-[0.18em] text-slate-200/80 hover:text-white hover:bg-white/10 transition-colors"
-                    >
-                      {page.label}
-                    </Link>
-                  ))}
+                  {portfolioPages.map((page) => {
+                    const className =
+                      "block px-3 py-2 rounded-lg text-[11px] uppercase tracking-[0.18em] text-slate-200/80 hover:text-white hover:bg-white/10 transition-colors";
+
+                    if (page.external) {
+                      return (
+                        <a
+                          key={page.href}
+                          href={page.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setNavOpen(false)}
+                          className={className}
+                        >
+                          {page.label}
+                        </a>
+                      );
+                    }
+
+                    return (
+                      <Link
+                        key={page.href}
+                        href={page.href}
+                        onClick={() => setNavOpen(false)}
+                        className={className}
+                      >
+                        {page.label}
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
             </div>
