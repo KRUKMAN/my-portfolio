@@ -91,7 +91,7 @@ export default function AIAutomationClient() {
 
           <div className="flex items-center gap-4">
             <a href="#contact" className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded hover:bg-green-400 transition-colors">
-              Let's talk!
+              Let&apos;s talk!
             </a>
           </div>
         </div>
@@ -145,7 +145,7 @@ export default function AIAutomationClient() {
       <section className="py-20 px-6 bg-neutral-900/20 border-y border-white/5">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <h2 className="text-3xl md:text-4xl font-bold">Your GTM Should Run Like a Michelin Kitchen</h2>
-          <p className="text-neutral-400 leading-relaxed text-lg">The best kitchens don't win on adrenaline - they win on preparation.</p>
+          <p className="text-neutral-400 leading-relaxed text-lg">The best kitchens don&apos;t win on adrenaline - they win on preparation.</p>
           <div className="grid md:grid-cols-2 gap-8 text-left max-w-3xl mx-auto mt-8 bg-[#0a0a0a] p-8 rounded-2xl border border-white/5">
             <div className="space-y-4">
               <p className="text-white font-medium">We create a back-of-house where:</p>
@@ -163,7 +163,7 @@ export default function AIAutomationClient() {
             </div>
             <div className="space-y-4">
               <p className="text-white font-medium">The Result:</p>
-              <p className="text-sm text-neutral-400 italic">"Your team gets to show up, focus, and shine - because the systems behind them finally make sense."</p>
+              <p className="text-sm text-neutral-400 italic">&quot;Your team gets to show up, focus, and shine - because the systems behind them finally make sense.&quot;</p>
             </div>
           </div>
         </div>
@@ -216,7 +216,7 @@ export default function AIAutomationClient() {
       <section className="py-24 px-6 relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-8">We Don&apos;t Build More Chaos - We Remove It</h2>
-          <p className="text-neutral-400 text-lg leading-relaxed mb-12 max-w-2xl mx-auto">Your team should never feel like they're juggling tools, chasing data, or guessing the next step.</p>
+          <p className="text-neutral-400 text-lg leading-relaxed mb-12 max-w-2xl mx-auto">Your team should never feel like they&apos;re juggling tools, chasing data, or guessing the next step.</p>
 
           <div className="grid sm:grid-cols-2 gap-4 text-left max-w-2xl mx-auto">
             <div className="p-4 bg-white/5 rounded-lg border border-white/5 flex items-center gap-3">
