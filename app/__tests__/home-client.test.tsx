@@ -30,6 +30,9 @@ describe("HomeClient", () => {
         set href(value: string) {
           hrefMock = value;
         },
+        assign: (value: string) => {
+          hrefMock = value;
+        },
       },
     });
   });

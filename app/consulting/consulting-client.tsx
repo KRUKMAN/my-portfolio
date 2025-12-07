@@ -1,31 +1,23 @@
-"use client";
+﻿"use client";
 
-import { useState, useEffect, useRef, useCallback, type ReactNode } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Database, Mail, User, Zap, RefreshCw, Settings2, Target, ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowLeft, ArrowUpRight, Camera, ChevronDown, Mail, MapPin, Music } from "lucide-react";
 import Link from "next/link";
-import { portfolioPages } from "../data/navigation";
+
+// Inline data to ensure self-contained rendering
+const portfolioPages = [
+  { href: "/consulting", label: "Consulting" },
+  { href: "https://rundown.digital", label: "AI / Automation", external: true },
+  { href: "/photography", label: "Photography" },
+  { href: "/art", label: "Street / Art" },
+];
 
 export default function ConsultingClient() {
-  const [pipelineStep, setPipelineStep] = useState(0);
   const [navOpen, setNavOpen] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
-
-  const runSimulation = useCallback(() => {
-    setPipelineStep(1);
-    setTimeout(() => setPipelineStep(2), 1000);
-    setTimeout(() => setPipelineStep(3), 2500);
-    setTimeout(() => setPipelineStep(4), 4000);
-    setTimeout(() => setPipelineStep(0), 6000);
-  }, []);
-
-  // Auto-run the simulation every few seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      runSimulation();
-    }, 8000);
-    return () => clearInterval(interval);
-  }, [runSimulation]);
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   useEffect(() => {
     const handleClickAway = (event: MouseEvent | TouchEvent) => {
@@ -47,170 +39,289 @@ export default function ConsultingClient() {
   }, []);
 
   return (
-    <main className="relative min-h-screen bg-[#0F1115] text-slate-200 p-6 md:px-10 selection:bg-blue-500/30 pb-32 pt-20">
-      
-      <div className="absolute top-6 left-0 right-0 px-6 md:px-10">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-xs uppercase tracking-[0.2em] text-slate-400">
-          <div className="flex items-center gap-3">
-            <Link 
-              href="/" 
-              className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span>Home</span>
-            </Link>
-            <div className="relative" ref={navRef}>
-              <button
-                onClick={() => setNavOpen((o) => !o)}
-                className="group flex items-center gap-1 px-2 py-1 rounded-full text-slate-200/80 hover:text-white transition-colors"
-                aria-expanded={navOpen}
-                aria-haspopup="true"
-              >
-                <span>Consulting</span>
-                <ChevronDown className={`w-3 h-3 transition-transform ${navOpen ? "rotate-180" : ""}`} />
-                <span className="absolute inset-0 rounded-full border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden />
-              </button>
-              {navOpen && (
-                <div className="absolute left-0 mt-2 w-48 sm:w-56 min-w-[11rem] rounded-xl bg-black/90 border border-white/10 backdrop-blur shadow-[0_15px_40px_rgba(0,0,0,0.4)] p-2 z-50">
-                  {portfolioPages.map((page) => {
-                    const className =
-                      "block px-3 py-2 rounded-lg text-[11px] uppercase tracking-[0.18em] text-slate-200/80 hover:text-white hover:bg-white/10 transition-colors";
+    <main className="relative min-h-screen bg-[#f5f5f4] text-[#1c1917] font-sans selection:bg-[#1c1917] selection:text-white overflow-x-hidden">
+      {/* --- NAVIGATION (Sticky & Minimal) --- */}
+      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-6 md:px-12 flex justify-between items-center mix-blend-difference text-[#e7e5e4]">
+        <Link
+          href="/"
+          className="group flex items-center gap-2 text-sm uppercase tracking-widest hover:opacity-70 transition-opacity font-mono"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          <span>Index</span>
+        </Link>
 
-                    if (page.external) {
-                      return (
-                        <a
-                          key={page.href}
-                          href={page.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setNavOpen(false)}
-                          className={className}
-                        >
-                          {page.label}
-                        </a>
-                      );
-                    }
+        <div className="relative" ref={navRef}>
+          <button
+            onClick={() => setNavOpen((o) => !o)}
+            className="flex items-center gap-2 text-sm uppercase tracking-widest hover:opacity-70 transition-opacity font-mono"
+          >
+            <span className="hidden sm:inline">Jake Krukowski</span>
+            <ChevronDown className={`w-3 h-3 transition-transform ${navOpen ? "rotate-180" : ""}`} />
+          </button>
 
-                    return (
-                      <Link
-                        key={page.href}
-                        href={page.href}
-                        onClick={() => setNavOpen(false)}
-                        className={className}
-                      >
-                        {page.label}
-                      </Link>
-                    );
-                  })}
-                </div>
+          {navOpen && (
+            <div className="absolute right-0 mt-4 w-48 bg-[#1c1917] text-[#f5f5f4] rounded-none shadow-[4px_4px_0px_rgba(0,0,0,0.1)] overflow-hidden py-2 border border-stone-800">
+              {portfolioPages.map((page) =>
+                page.external ? (
+                  <a
+                    key={page.href}
+                    href={page.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setNavOpen(false)}
+                    className="block px-4 py-2 text-xs uppercase tracking-widest hover:bg-[#f5f5f4] hover:text-[#1c1917] transition-colors font-mono"
+                  >
+                    {page.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={page.href}
+                    href={page.href}
+                    onClick={() => setNavOpen(false)}
+                    className="block px-4 py-2 text-xs uppercase tracking-widest hover:bg-[#f5f5f4] hover:text-[#1c1917] transition-colors font-mono"
+                  >
+                    {page.label}
+                  </Link>
+                )
               )}
             </div>
-          </div>
+          )}
         </div>
-      </div>
+      </nav>
 
-      {/* --- HERO --- */}
-      <section className="max-w-6xl mx-auto mb-16">
-        <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
+      {/* --- HERO SECTION --- */}
+      <section className="relative pt-40 pb-20 px-6 md:px-12 max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="space-y-8"
         >
-          <div className="inline-block px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-mono mb-4">
-            SYSTEM ARCHITECTURE & OPS
+          <div className="w-16 h-16 rounded-full bg-[#1c1917] overflow-hidden mb-8 border border-stone-800 shadow-none flex items-center justify-center text-white font-serif italic text-xl">
+            JK
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white">
-            Scaling Logic. <br />
-            <span className="text-slate-500">Removing Friction.</span>
+
+          <h1 className="text-5xl md:text-7xl font-serif italic font-medium leading-[0.95] tracking-tight text-[#1c1917]">
+            RevOps, SalesOps, <br />
+            <span className="not-italic text-stone-400">&</span> GTM Automation.
           </h1>
-          <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-            I don&apos;t just manage sales tools; I architect the ecosystems that make revenue predictable. 
-            From Hubspot automations to custom API integrations.
-          </p>
+
+          <div className="flex flex-col md:flex-row gap-8 md:gap-16 text-[#1c1917] text-lg md:text-xl font-medium leading-relaxed max-w-3xl mt-12 border-l-2 border-stone-300 pl-6">
+            <p>
+              I architect the ecosystems where revenue grows. I combine technical precision with operational flow to help organizations cut the noise and focus on what matters.
+            </p>
+          </div>
+
+          <div className="pt-8 flex flex-col sm:flex-row gap-6 text-xs font-mono uppercase tracking-widest text-stone-500">
+            <span className="flex items-center gap-2">
+              <MapPin className="w-3 h-3" /> Remote / Europe
+            </span>
+            <a
+              href="mailto:j.krukowski@icloud.com"
+              className="flex items-center gap-2 hover:text-black transition-colors underline decoration-stone-300 underline-offset-4"
+            >
+              <Mail className="w-3 h-3" /> j.krukowski@icloud.com
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div style={{ opacity }} className="absolute bottom-0 left-6 md:left-12 hidden md:block">
+          <div className="h-16 w-[1px] bg-black" />
         </motion.div>
       </section>
 
-      {/* --- PIPELINE DEMO --- */}
-      <section className="max-w-6xl mx-auto mb-32">
-        <div className="border border-slate-700/50 bg-slate-800/30 rounded-3xl p-8 md:p-12 backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-          <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Zap className="text-yellow-400 w-5 h-5" />
-                Live Workflow Demo
-              </h3>
-              <p className="text-slate-400">
-                See how I structure data flows. Click the button to simulate a &quot;New Lead&quot; entering the CRM system.
-              </p>
-              
-              <button 
-                onClick={runSimulation}
-                disabled={pipelineStep > 0}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium shadow-lg shadow-blue-900/20 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {pipelineStep === 0 ? "Simulate New Lead" : "Processing..."}
-              </button>
-            </div>
+      {/* --- EXPERIENCE (CV) --- */}
+      <section className="py-24 px-6 md:px-12 max-w-5xl mx-auto border-t border-stone-300">
+        <div className="grid md:grid-cols-[1fr,3fr] gap-12">
+          <h2 className="text-xs font-mono uppercase tracking-widest text-stone-400 sticky top-24 h-fit">Timeline</h2>
 
-            <div className="bg-slate-900/80 border border-slate-700 rounded-xl p-6 space-y-4">
-              <PipelineNode active={pipelineStep >= 1} icon={<User size={18} />} label="Lead Captured" sub="Form Submission" color="text-blue-400" />
-              <Connector active={pipelineStep >= 2} />
-              <PipelineNode active={pipelineStep >= 2} icon={<Database size={18} />} label="Data Enrichment" sub="Clearbit / Apollo API" color="text-purple-400" />
-              <Connector active={pipelineStep >= 3} />
-              <PipelineNode active={pipelineStep >= 3} icon={<Mail size={18} />} label="Outreach Sequence" sub="Automated Email Sent" color="text-orange-400" />
-               {pipelineStep === 4 && (
-                <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-2 text-green-400 text-sm justify-center">
-                    <CheckCircle2 size={16} /> Automation Complete
-                </motion.div>
-               )}
+          <div className="space-y-20 relative">
+            {/* Vertical line for timeline effect */}
+            <div className="absolute left-[-29px] top-2 bottom-2 w-[1px] bg-stone-200 hidden md:block" />
+
+            <ExperienceItem
+              role="Sales Operations Manager"
+              company="Prezi"
+              period="Dec 2024 - Present"
+              description="Keeping global sales ops and contract processes tight for a major visual comms platform. Remote, efficient, and scalable."
+              tags={["SalesOps", "Contracts", "Global Ops"]}
+            />
+
+            <ExperienceItem
+              role="Owner & Principal Consultant"
+              company="The Rundown"
+              period="Jun 2021 - Present"
+              description="My own shop. I provide RevOps-as-a-Service to streamline GTM motions. From deep CX analysis to full-stack AI transformation, I build the systems that let you sleep at night."
+              tags={["GTM Strategy", "AI Transformation", "RevOps", "Consulting"]}
+            />
+
+            <ExperienceItem
+              role="Business Development Manager"
+              company="Callstack"
+              period="Jan 2024 - Nov 2024"
+              description="Full-Cycle AE role with a heavy mix of Marketing and Ops. I didn't just sell; I built the lists, set the cadences, and owned the tools (Apollo, Zopto) that made the sales team tick."
+              tags={["Full-Cycle Sales", "Apollo", "Zopto", "Process Workshops"]}
+            />
+
+            <ExperienceItem
+              role="Demand Generation Manager"
+              company="Text (formerly LiveChat)"
+              period="Mar 2023 - Jan 2024"
+              description="Strategic leadership with a focus on PLS and Automation. I owned the lead gen machine - automations, ICP creation, inbound strategy - and managed a beast of a tech stack including Salesforce and Tableau."
+              tags={["PLS", "Marketing Automation", "ABM", "Salesforce", "Tableau"]}
+            />
+
+            <ExperienceItem
+              role="Sales Operations Manager"
+              company="Text (formerly LiveChat)"
+              period="Oct 2021 - Mar 2023"
+              description="Partnered with leadership to drive performance through analytics. If it involved a funnel, a dashboard, or a cross-department project, I was building it."
+              tags={["Funnel Monitoring", "Project Management", "SalesLoft", "Lead Gen"]}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* --- TECH STACK --- */}
+      <section className="py-24 px-6 md:px-12 max-w-5xl mx-auto border-t border-stone-300">
+        <div className="grid md:grid-cols-[1fr,3fr] gap-12">
+          <h2 className="text-xs font-mono uppercase tracking-widest text-stone-400 sticky top-24 h-fit">The Stack</h2>
+
+          <div className="space-y-8">
+            <p className="text-2xl font-serif italic text-[#1c1917] leading-tight">
+              I&apos;m tool-agnostic but fluent in the modern revenue stack. I connect disparate tools into a unified source of truth.
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {[
+                "Salesforce",
+                "HubSpot",
+                "Apollo",
+                "Zopto",
+                "Salesloft",
+                "Zapier",
+                "Tableau",
+                "Google Sheets",
+                "Clearbit",
+                "ZoomInfo",
+                "LeanData",
+                "GitHub",
+                "Jira",
+                "Notion",
+                "Google Analytics",
+                "PiwikPro",
+                "Vidyard",
+                "Chorus",
+                "ChatGPT / AI Ops",
+              ].map((skill) => (
+                <span
+                  key={skill}
+                  className="px-3 py-1 text-xs font-mono uppercase tracking-wider border border-black text-black bg-transparent hover:bg-black hover:text-white transition-colors cursor-default"
+                >
+                  {skill}
+                </span>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- OFFERINGS --- */}
-      <section className="max-w-7xl mx-auto grid md:grid-cols-3 gap-6">
-        <ServiceCard title="Tech Stack Audit" desc="Cleaning up redundant licenses and optimizing tool usage." icon={<RefreshCw className="w-4 h-4 text-blue-300" />} />
-        <ServiceCard title="RevOps Strategy" desc="Aligning marketing, sales, and CS data into one truth." icon={<Target className="w-4 h-4 text-blue-300" />} />
-        <ServiceCard title="No-Code Builds" desc="Zapier, Make, and n8n workflows that replace manual data entry." icon={<Settings2 className="w-4 h-4 text-blue-300" />} />
+      {/* --- ROOTS & PERSONAL --- */}
+      <section className="py-24 px-6 md:px-12 max-w-5xl mx-auto border-t border-stone-300 bg-stone-200/30 rounded-3xl mb-12">
+        <div className="grid md:grid-cols-[1fr,3fr] gap-12">
+          <h2 className="text-xs font-mono uppercase tracking-widest text-stone-500 sticky top-24 h-fit flex items-center gap-2">
+            <Music className="w-3 h-3" /> Roots & Rhythm
+          </h2>
+
+          <div className="space-y-12">
+            <div className="space-y-6 text-[#1c1917] text-lg leading-relaxed">
+              <p>
+                Before I was architecting revenue systems, I was perfecting recipes. My background is rooted in gastronomy - as a cook, specialty coffee bartender, and barista.
+              </p>
+              <p>
+                I learned quickly that <em className="font-serif italic font-medium">smooth operations taste better</em>. Whether it&apos;s a perfectly timed dinner service or a seamless lead handoff, the principle is identical: efficient backends create happy customers.
+              </p>
+              <p>
+                That obsession with flow carried me through managing fleets at <strong className="font-semibold">ComfortCar</strong> and solving tickets in the trenches at <strong className="font-semibold">Tidio</strong>. Friction kills the vibe - and the growth - in any industry.
+              </p>
+            </div>
+
+            <div className="border-t border-stone-300 pt-8 mt-8">
+              <div className="flex flex-col sm:flex-row gap-8 items-start sm:items-center justify-between">
+                <p className="text-base text-stone-600 max-w-md">
+                  Off the clock, I keep the tempo up. I play <span className="text-black font-semibold">5 instruments</span> and shoot <a
+                    href="/photography"
+                    className="underline decoration-stone-400 hover:text-black transition-colors"
+                  >
+                    branding & events
+                  </a> to decompress.
+                </p>
+                <div className="flex gap-4">
+                  <div className="w-12 h-12 bg-[#1c1917] rounded-full flex items-center justify-center text-white shadow-lg">
+                    <Music className="w-5 h-5" />
+                  </div>
+                  <div className="w-12 h-12 bg-stone-300 rounded-full flex items-center justify-center text-[#1c1917]">
+                    <Camera className="w-5 h-5" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- FOOTER / CONTACT --- */}
+      <section className="py-24 px-6 md:px-12 bg-[#1c1917] text-[#f5f5f4] mt-12">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+          <div className="space-y-6">
+            <h2 className="text-4xl md:text-6xl font-serif italic">Your operations need <br /> a boost?</h2>
+            <a
+              href="mailto:j.krukowski@icloud.com"
+              className="inline-flex items-center gap-3 text-stone-400 hover:text-white transition-colors text-lg border-b border-stone-700 pb-1"
+            >
+              j.krukowski@icloud.com <ArrowUpRight className="w-5 h-5" />
+            </a>
+          </div>
+
+          <div className="text-xs font-mono uppercase tracking-widest text-stone-600">&copy; {new Date().getFullYear()} Jake Krukowski</div>
+        </div>
       </section>
     </main>
   );
 }
 
-type PipelineNodeProps = {
-  active: boolean;
-  icon: ReactNode;
-  label: string;
-  sub: string;
-  color: string;
-};
+function ExperienceItem({
+  role,
+  company,
+  period,
+  description,
+  tags,
+}: {
+  role: string;
+  company: string;
+  period: string;
+  description: string;
+  tags: string[];
+}) {
+  return (
+    <div className="group relative">
+      {/* Dot on timeline */}
+      <div className="absolute left-[-34px] top-1.5 w-2.5 h-2.5 bg-stone-300 rounded-full border-2 border-[#f5f5f4] group-hover:bg-black transition-colors hidden md:block" />
 
-function PipelineNode({ active, icon, label, sub, color }: PipelineNodeProps) {
-    return (
-        <div className={`flex items-center gap-4 p-3 rounded-lg border transition-all duration-500 ${active ? 'bg-slate-800 border-slate-600 opacity-100' : 'bg-slate-900 border-transparent opacity-30'}`}>
-            <div className={`p-2 rounded-md bg-slate-950 ${color}`}>{icon}</div>
-            <div><div className="text-sm font-medium text-slate-200">{label}</div><div className="text-xs text-slate-500">{sub}</div></div>
-             {active && <motion.div layoutId="glow" className="ml-auto w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]" />}
-        </div>
-    )
-}
-
-function Connector({ active }: { active: boolean }) {
-    return (
-        <div className="h-6 w-0.5 bg-slate-800 mx-6 relative"><div className={`absolute top-0 left-0 w-full bg-blue-500 transition-all duration-1000 ${active ? 'h-full' : 'h-0'}`} /></div>
-    )
-}
-
-function ServiceCard({ title, desc, icon }: { title: string, desc: string, icon: ReactNode }) {
-    return (
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-600 transition-colors group">
-            <div className="flex items-center gap-2 text-white mb-2">
-              {icon}
-              <h3 className="text-lg font-semibold group-hover:text-blue-300 transition-colors">{title}</h3>
-            </div>
-            <p className="text-slate-400 text-sm leading-relaxed">{desc}</p>
-        </div>
-    )
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2">
+        <h3 className="text-2xl font-serif text-[#1c1917]">{role}</h3>
+        <span className="text-xs font-mono text-stone-500 uppercase tracking-widest whitespace-nowrap ml-0 sm:ml-4">{period}</span>
+      </div>
+      <div className="text-black font-mono text-xs uppercase tracking-widest mb-4">{company}</div>
+      <p className="text-stone-700 leading-relaxed mb-6 max-w-2xl text-base">{description}</p>
+      <div className="flex flex-wrap gap-x-4 gap-y-2">
+        {tags.map((tag) => (
+          <span key={tag} className="text-[10px] text-stone-500 font-mono uppercase tracking-wider before:content-['#'] before:mr-1">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
 }
