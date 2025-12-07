@@ -78,13 +78,6 @@ export default function PhotographyClient({ initialCategory = "events", showTogg
     };
   }, []);
 
-  // Reset modal when switching category if current selection is not in view
-  useEffect(() => {
-    if (selectedId === null) return;
-    const exists = filteredPhotos.some((p) => p.id === selectedId);
-    if (!exists) setSelectedId(null);
-  }, [filteredPhotos, selectedId]);
-
   return (
     <main className="relative min-h-screen bg-[#0a0a0a] text-white selection:bg-white/20 pb-32">
       
@@ -158,7 +151,10 @@ export default function PhotographyClient({ initialCategory = "events", showTogg
               return (
                 <button
                   key={cat.key}
-                  onClick={() => setSelectedCategory(cat.key as PhotoCategory)}
+                  onClick={() => {
+                    setSelectedCategory(cat.key as PhotoCategory);
+                    setSelectedId(null);
+                  }}
                   className={`px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] rounded-full transition-colors ${
                     active ? "bg-white text-black" : "text-white/70 hover:text-white"
                   }`}
