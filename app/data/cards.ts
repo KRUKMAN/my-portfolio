@@ -24,7 +24,7 @@ export const cards: Card[] = [
     secondaryColor: "text-green-400",
     font: "font-sans tracking-tight",
     contact: "hello@rundown.digital",
-    link: "/ai-automation",
+    link: "https://rundown.digital",
   },
   {
     id: "revops",

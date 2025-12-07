@@ -5,14 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { Compass, Mail } from "lucide-react";
 import { ContactModal } from "./ContactModal";
-
-const pages = [
-  { href: "/", label: "Home" },
-  { href: "/consulting", label: "Consulting" },
-  { href: "/ai-automation", label: "AI / Automation" },
-  { href: "/photography", label: "Photography" },
-  { href: "/art", label: "Street / Art" },
-];
+import { portfolioPages } from "../data/navigation";
 
 type PageSelectorProps = {
   contextLabel?: string;
@@ -58,17 +51,34 @@ export function PageSelector({ contextLabel = "General" }: PageSelectorProps) {
 
           {open && (
             <div className="absolute bottom-14 right-0 w-52 rounded-2xl bg-[#0c0f14]/95 backdrop-blur border border-white/10 shadow-[0_18px_36px_rgba(0,0,0,0.35)] p-3 space-y-2">
-              {pages.map((page) => {
-                const active = pathname === page.href;
+              {[{ href: "/", label: "Home" }, ...portfolioPages].map((page) => {
+                const isExternal = page.external ?? page.href.startsWith("http");
+                const active = !isExternal && pathname === page.href;
+                const className = `block px-3 py-2 rounded-xl text-sm transition-colors ${
+                  active
+                    ? "bg-white text-black font-semibold"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
+                }`;
+                if (isExternal) {
+                  return (
+                    <a
+                      key={page.href}
+                      href={page.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={className}
+                      onClick={() => setOpen(false)}
+                    >
+                      {page.label}
+                    </a>
+                  );
+                }
+
                 return (
                   <Link
                     key={page.href}
                     href={page.href}
-                    className={`block px-3 py-2 rounded-xl text-sm transition-colors ${
-                      active
-                        ? "bg-white text-black font-semibold"
-                        : "text-white/80 hover:text-white hover:bg-white/10"
-                    }`}
+                    className={className}
                     onClick={() => setOpen(false)}
                   >
                     {page.label}
