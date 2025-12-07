@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Terminal, Box, Check, ChevronRight, ShieldCheck, CheckCircle2, Zap, Cpu, Users, LayoutTemplate } from "lucide-react";
+import { ArrowRight, Terminal, Box, Check, ChevronRight, CheckCircle2, Zap, Cpu, Users, LayoutTemplate } from "lucide-react";
 import Link from "next/link";
 import WorkflowEngine from "./components/workflow-engine";
 
@@ -70,7 +70,7 @@ export default function AIAutomationClient() {
     <main className="min-h-screen bg-[#050505] text-white selection:bg-green-500/30 font-sans">
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#050505]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="https://rundown.digital" target="_blank" rel="noreferrer" className="flex items-center gap-2 group">
             <div className="w-8 h-8 bg-green-500/10 border border-green-500/20 rounded flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
               <Terminal className="w-4 h-4 text-green-500" />
             </div>
@@ -84,16 +84,15 @@ export default function AIAutomationClient() {
             <Link href="#demos" className="hover:text-white transition-colors">
               Demos
             </Link>
-            <Link href="#process" className="hover:text-white transition-colors">
-              Process
+            <Link href="#contact" className="hover:text-white transition-colors">
+              Contact
             </Link>
           </nav>
 
           <div className="flex items-center gap-4">
-            <Link href="/" className="hidden sm:block text-xs text-white/40 hover:text-white transition-colors uppercase tracking-widest">
-              Back to Portfolio
-            </Link>
-            <button className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded hover:bg-green-400 transition-colors">Get Started</button>
+            <a href="#contact" className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded hover:bg-green-400 transition-colors">
+              Let's talk!
+            </a>
           </div>
         </div>
       </header>
@@ -116,32 +115,29 @@ export default function AIAutomationClient() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <button className="px-8 py-4 bg-green-600 hover:bg-green-500 text-black font-bold rounded-lg transition-all flex items-center justify-center gap-2 group">
+              <a href="#contact" className="px-8 py-4 bg-green-600 hover:bg-green-500 text-black font-bold rounded-lg transition-all flex items-center justify-center gap-2 group">
                 Let&apos;s have a free chat
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-lg transition-all">Explore Automations</button>
+              </a>
             </div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="rounded-xl bg-[#0A0A0A] border border-white/10 p-1 shadow-2xl relative">
-            <div className="absolute -top-12 left-0 right-0 text-center text-xs text-neutral-500 font-mono mb-2">"Behind the Scenes: Your New Back-of-House in Action"</div>
             <div className="bg-black/50 rounded-lg border border-white/5 p-4 h-[320px] relative overflow-hidden">
-              <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-2">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
+                <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-2">
+                    <div className="flex gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
+                        <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
                   <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50" />
                 </div>
                 <div className="text-[10px] text-white/20 font-mono">system_v2.sh</div>
               </div>
-              <div className="font-mono text-sm leading-relaxed text-green-400/90 whitespace-pre-wrap">
-                {typedText}
-                <span className="animate-pulse inline-block w-2.5 h-5 bg-green-500/50 align-bottom ml-1" />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500/5 to-transparent pointer-events-none animate-scan" />
+                <div className="font-mono text-sm leading-relaxed text-green-400/90 whitespace-pre-wrap">
+                    {typedText}
+                    <span className="animate-pulse inline-block w-2.5 h-5 bg-green-500/50 align-bottom ml-1" />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500/5 to-transparent pointer-events-none animate-scan" />
             </div>
-            <div className="text-center mt-3 text-xs text-neutral-600 font-mono">A kitchen-level mise en place for your GTM systems.</div>
           </motion.div>
         </div>
       </section>
@@ -248,81 +244,87 @@ export default function AIAutomationClient() {
       </section>
 
       <section id="process" className="py-24 px-6 text-center bg-gradient-to-b from-[#050505] to-[#0a0a0a] border-t border-white/5">
-        <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">Ready to turn chaos into clarity'</h2>
-        <p className="text-neutral-400 max-w-xl mx-auto mb-10 text-lg">Let's design a GTM engine that runs calmly, predictably, and efficiently - even during the rush.</p>
+        <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">Ready to turn chaos into clarity?</h2>
+        <p className="text-neutral-400 max-w-xl mx-auto mb-10 text-lg">Let&apos;s design a GTM engine that runs calmly, predictably, and efficiently — even during the rush.</p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <button className="px-10 py-5 bg-white text-black text-lg font-bold rounded hover:bg-neutral-200 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.1)]">Book an Intro</button>
-          <button className="px-10 py-5 bg-transparent border border-white/20 text-white text-lg font-bold rounded hover:bg-white/5 transition-colors">See More Automations</button>
+          <a href="#contact" className="px-10 py-5 bg-white text-black text-lg font-bold rounded hover:bg-neutral-200 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+            Book an Intro
+          </a>
         </div>
       </section>
 
-      <section className="py-24 px-6 bg-neutral-900/20 border-y border-white/5" id="scope">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16">
-          <div>
-            <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
-              <ShieldCheck className="w-6 h-6 text-green-500" />
-              Scope of Work
-            </h3>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {[
-                "CRM ownership, cleanup & governance",
-                "Automation engineering & maintenance",
-                "Support & CX operations management",
-                "Internal process mapping, QA & optimization",
-                "Tech stack consolidation & implementation",
-                "Documentation, playbooks & SOP maintenance",
-                "AI-powered enhancements where they make sense",
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-3 p-3 bg-black/40 border border-white/5 rounded-lg">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                  <span className="text-sm text-neutral-300">{item}</span>
-                </div>
-              ))}
+      <section id="contact" className="py-24 px-6 bg-[#050505]">
+        <div className="max-w-4xl mx-auto rounded-2xl border border-white/10 bg-black/40 p-8 md:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-green-500 mb-2">Contact</p>
+              <h3 className="text-3xl font-bold">Tell us about your ops bottlenecks</h3>
+              <p className="text-neutral-400 mt-2">We respond within 1 business day with next steps.</p>
             </div>
-
-            <div className="mt-8 p-6 border-l-2 border-green-500/50 bg-green-500/5 rounded-r-lg">
-              <p className="text-green-200 text-sm font-medium">No ads. No cold outbound strategy. Just the operational backbone that lets your GTM and Support teams perform without chaos.</p>
+            <div className="flex items-center gap-3 text-sm text-neutral-400">
+              <div className="h-10 w-10 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center font-bold text-white">JK</div>
+              <div>
+                <p className="text-white font-medium">
+                  Led by{" "}
+                  <Link href="/" className="underline decoration-dotted underline-offset-4 hover:text-green-400">
+                    Jakub Krukowski
+                  </Link>
+                </p>
+                <p className="text-xs text-neutral-500">Sales & RevOps leadership across Tidio, Coloplast, LiveChat, Prezi.</p>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-8">
-            <h3 className="text-2xl font-bold mb-8">Why The Rundown'</h3>
-            <ul className="space-y-6">
-              {[
-                "You get an operator who has lived inside Sales, Support and RevOps - not a generic dev shop.",
-                "You avoid hiring multiple full-time specialists while still getting senior-level thinking.",
-                "Your systems stay healthy, updated, and documented like a well-run kitchen.",
-                "Work gets done faster, with fewer errors, and less context-switching for your team.",
-                "You finally have one place responsible for how things run - and someone owning the calm.",
-              ].map((point, i) => (
-                <li key={point} className="flex gap-4">
-                  <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-3.5 h-3.5 text-white" />
-                  </div>
-                  <span className="text-neutral-400 text-sm leading-relaxed">{point}</span>
-                </li>
-              ))}
-            </ul>
+          <form className="grid md:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-xs uppercase tracking-[0.18em] text-white/60">Name</label>
+              <input required type="text" className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-3 text-sm text-white placeholder:text-white/30 focus:border-green-500 focus:outline-none" placeholder="Your name" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-xs uppercase tracking-[0.18em] text-white/60">Email</label>
+              <input required type="email" className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-3 text-sm text-white placeholder:text-white/30 focus:border-green-500 focus:outline-none" placeholder="you@company.com" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-xs uppercase tracking-[0.18em] text-white/60">Company</label>
+              <input type="text" className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-3 text-sm text-white placeholder:text-white/30 focus:border-green-500 focus:outline-none" placeholder="Company name" />
+            </div>
+            <div className="flex flex-col gap-2 md:col-span-2">
+              <label className="text-xs uppercase tracking-[0.18em] text-white/60">What do you need help with?</label>
+              <textarea required rows={4} className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-3 text-sm text-white placeholder:text-white/30 focus:border-green-500 focus:outline-none" placeholder="Tell us about systems, workflows, or metrics you want fixed." />
+            </div>
+            <div className="md:col-span-2 flex justify-end">
+              <button type="submit" className="px-8 py-3 bg-green-600 hover:bg-green-500 text-black font-bold rounded-lg transition-all flex items-center gap-2">
+                Submit
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
 
-            <div className="pt-8 border-t border-white/10">
-              <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center font-bold text-white">JK</div>
-                <div>
-                  <p className="text-sm text-white font-medium">Led by Jakub Krukowski</p>
-                  <p className="text-xs text-neutral-500 mt-0.5">Sales & RevOps leadership across Tidio, Coloplast, LiveChat, Prezi - now building calm systems for growing teams.</p>
-                </div>
-              </div>
+      <section className="py-16 px-6 bg-neutral-900/20 border-y border-white/5" id="scope">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center gap-4">
+            <div className="h-10 w-10 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center font-bold text-white">JK</div>
+            <div>
+              <p className="text-sm text-white font-medium">
+                Led by{" "}
+                <Link href="/" className="underline decoration-dotted underline-offset-4 hover:text-green-400">
+                  Jakub Krukowski
+                </Link>
+              </p>
+              <p className="text-xs text-neutral-500 mt-0.5">Sales & RevOps leadership across Tidio, Coloplast, LiveChat, Prezi - now building calm systems for growing teams.</p>
             </div>
           </div>
         </div>
       </section>
 
       <section className="py-24 px-6 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-8 tracking-tight">Ready to run like a well-prepped kitchen'</h2>
+        <h2 className="text-4xl md:text-5xl font-bold mb-8 tracking-tight">Ready to run like a well-prepped kitchen?</h2>
         <p className="text-neutral-400 max-w-xl mx-auto mb-8">
-          If you're tired of duct-taped tools, stressed reps, and dashboards you don't trust, let's redesign how your operations work - calmly, deliberately, and with room to scale.
+          If you&apos;re tired of duct-taped tools, stressed reps, and dashboards you don&apos;t trust, let&apos;s redesign how your operations work - calmly, deliberately, and with room to scale.
         </p>
-        <button className="px-10 py-5 bg-white text-black text-lg font-bold rounded hover:bg-neutral-200 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.1)]">Let&apos;s have a free chat</button>
+        <a href="#contact" className="px-10 py-5 bg-white text-black text-lg font-bold rounded hover:bg-neutral-200 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.1)]">Let&apos;s have a free chat</a>
       </section>
 
       <footer className="border-t border-white/10 py-12 bg-black">

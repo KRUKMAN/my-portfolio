@@ -18,7 +18,6 @@ import {
   Clock,
   ListFilter,
   CheckCircle2,
-  ArrowRight,
   Zap,
   Cpu,
   FileText,
@@ -50,7 +49,6 @@ type UseCase = {
     icon: ReactNode;
     text: string;
   };
-  metaphor: string;
 };
 
 type WorkflowEngineProps = {
@@ -75,7 +73,6 @@ const DEFAULT_USE_CASES: UseCase[] = [
       { icon: <Database size={14} />, label: "Update Salesforce", sub: "Auto-log notes & fields", theme: "blue" },
     ],
     successMessage: { icon: <CheckCircle2 size={14} />, text: "Intelligence Stored" },
-    metaphor: "Mise en place for your pipeline. Everything prepped before the next task begins.",
   },
   {
     id: "lead-flow",
@@ -91,7 +88,6 @@ const DEFAULT_USE_CASES: UseCase[] = [
       { icon: <Mail size={14} />, label: "Draft Personal Email", sub: "AI-generated, human-reviewed", theme: "white" },
     ],
     successMessage: { icon: <Zap size={14} />, text: "Outreach Ready" },
-    metaphor: "Your mise en place for every new opportunity — prepped perfectly for your reps.",
   },
   {
     id: "support-cx",
@@ -107,7 +103,6 @@ const DEFAULT_USE_CASES: UseCase[] = [
       { icon: <Bell size={14} />, label: "Alert Success Manager", sub: "Slack, email, or task", theme: "red" },
     ],
     successMessage: { icon: <ShieldAlert size={14} />, text: "Risk Flagged" },
-    metaphor: "Like a chef catching an issue mid-service before it ever reaches the guest.",
   },
   {
     id: "task-routing",
@@ -124,7 +119,6 @@ const DEFAULT_USE_CASES: UseCase[] = [
       { icon: <CheckCircle2 size={14} />, label: "Close Loop", sub: "Tags & notes added", theme: "green" },
     ],
     successMessage: { icon: <CheckCircle2 size={14} />, text: "Task Owned & Routed" },
-    metaphor: "Every order goes to the right station, instantly. No confusion in the pass.",
   },
   {
     id: "deal-desk",
@@ -141,7 +135,6 @@ const DEFAULT_USE_CASES: UseCase[] = [
       { icon: <FileSignature size={14} />, label: "Update Contract", sub: "Autogenerate CPQ/PDF", theme: "purple" },
     ],
     successMessage: { icon: <Zap size={14} />, text: "Deal Unblocked" },
-    metaphor: "The expeditor ensuring every plate is perfect before it leaves the kitchen.",
   },
 ];
 
@@ -210,11 +203,7 @@ function PipelineNode({
         <div className={`text-xs font-bold tracking-wide truncate transition-colors duration-300 ${isLit ? "text-white" : "text-neutral-500"}`}>{label}</div>
         <div className={`text-[10px] uppercase tracking-wider truncate transition-colors duration-300 ${isLit ? "text-white/40" : "text-neutral-600"}`}>{sub}</div>
       </div>
-      {isActive && (
-        <motion.div layoutId="active-arrow" className="text-white" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-          <ArrowRight size={14} />
-        </motion.div>
-      )}
+      {isActive && <div className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_12px_rgba(34,197,94,0.9)]" />}
     </div>
   );
 }
@@ -320,10 +309,6 @@ export default function WorkflowEngine({ className = "", useCases = DEFAULT_USE_
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-4 leading-tight tracking-tight">{currentUseCase.title}</h2>
                 <p className="text-neutral-400 text-sm leading-relaxed border-l-2 border-white/10 pl-4">{currentUseCase.description}</p>
-              </div>
-
-              <div className="mt-4 p-3 bg-white/5 rounded border border-white/5">
-                <p className="text-[11px] text-neutral-300 italic font-mono leading-relaxed">"{currentUseCase.metaphor}"</p>
               </div>
 
               <div className="mt-6 p-4 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/5">
