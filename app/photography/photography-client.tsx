@@ -1,34 +1,42 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, X, Camera, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { photos } from "../data/photos";
 
-export default function PhotographyClient() {
+type PhotoCategory = "events" | "portraits";
+
+export default function PhotographyClient({ initialCategory = "events", showToggle = true }: { initialCategory?: PhotoCategory; showToggle?: boolean }) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [navOpen, setNavOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<PhotoCategory>(initialCategory);
   const navRef = useRef<HTMLDivElement | null>(null);
+
+  const filteredPhotos = useMemo(
+    () => photos.filter((p) => p.category === selectedCategory),
+    [selectedCategory]
+  );
 
   // --- NAVIGATION LOGIC ---
   const handleNext = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (selectedId === null) return;
     
-    const currentIndex = photos.findIndex((p) => p.id === selectedId);
-    const nextIndex = (currentIndex + 1) % photos.length; // Loops back to 0
-    setSelectedId(photos[nextIndex].id);
-  }, [selectedId]);
+    const currentIndex = filteredPhotos.findIndex((p) => p.id === selectedId);
+    const nextIndex = (currentIndex + 1) % filteredPhotos.length;
+    setSelectedId(filteredPhotos[nextIndex].id);
+  }, [selectedId, filteredPhotos]);
 
   const handlePrev = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (selectedId === null) return;
 
-    const currentIndex = photos.findIndex((p) => p.id === selectedId);
-    const prevIndex = (currentIndex - 1 + photos.length) % photos.length; // Loops to end
-    setSelectedId(photos[prevIndex].id);
-  }, [selectedId]);
+    const currentIndex = filteredPhotos.findIndex((p) => p.id === selectedId);
+    const prevIndex = (currentIndex - 1 + filteredPhotos.length) % filteredPhotos.length;
+    setSelectedId(filteredPhotos[prevIndex].id);
+  }, [selectedId, filteredPhotos]);
 
   // --- KEYBOARD LISTENERS ---
   useEffect(() => {
@@ -131,10 +139,38 @@ export default function PhotographyClient() {
         </motion.div>
       </section>
 
+      {/* --- CATEGORY TOGGLE --- */}
+      {showToggle && (
+        <section className="px-6 md:px-12 max-w-6xl mx-auto mb-8">
+          <div className="inline-flex rounded-full border border-white/10 bg-white/5 p-1">
+            {[
+              { key: "events", label: "Event & Branding" },
+              { key: "portraits", label: "Portraits & Moments" },
+            ].map((cat) => {
+              const active = selectedCategory === cat.key;
+              return (
+                <button
+                  key={cat.key}
+                  onClick={() => {
+                    setSelectedCategory(cat.key as PhotoCategory);
+                    setSelectedId(null);
+                  }}
+                  className={`px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] rounded-full transition-colors ${
+                    active ? "bg-white text-black" : "text-white/70 hover:text-white"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       {/* --- CINEMATIC MASONRY GRID --- */}
       <section className="px-4 md:px-12 max-w-[1800px] mx-auto">
         <div className="columns-1 md:columns-2 lg:columns-3 gap-4 md:gap-8 space-y-4 md:space-y-8">
-          {photos.map((photo, index) => (
+          {filteredPhotos.map((photo, index) => (
             <div key={photo.id} className="break-inside-avoid">
               <motion.div
                 layoutId={`card-${photo.id}`}
@@ -210,7 +246,7 @@ export default function PhotographyClient() {
               <X size={24} strokeWidth={1} />
             </motion.button>
 
-            {photos.map((photo) => {
+            {filteredPhotos.map((photo) => {
               if (photo.id !== selectedId) return null;
               return (
                 <motion.div

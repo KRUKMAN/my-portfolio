@@ -2,12 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  ArrowUpRight,
-  Plus,
-  ChevronUp,
-  ChevronDown,
-} from "lucide-react";
+import { ArrowUpRight, Plus, ChevronUp, ChevronDown, Terminal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cards as initialCards, Card } from "./data/cards";
 
@@ -203,11 +198,18 @@ export default function HomeClient() {
               >
                 {/* --- CARD TOP --- */}
                 <div className="flex justify-between items-start">
-                  <span
-                    className={`text-[10px] font-medium uppercase tracking-widest opacity-60 ${card.textColor}`}
-                  >
-                    {card.name}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    {card.id === "rundown" && (
+                      <div className="w-9 h-9 rounded bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-400">
+                        <Terminal size={16} />
+                      </div>
+                    )}
+                    <span
+                      className={`text-[10px] font-medium uppercase tracking-widest opacity-60 ${card.textColor}`}
+                    >
+                      {card.name}
+                    </span>
+                  </div>
                   <Plus size={14} className={`opacity-40 ${card.textColor}`} />
                 </div>
 

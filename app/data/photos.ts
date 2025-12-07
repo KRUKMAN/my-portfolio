@@ -6,6 +6,7 @@ export type Photo = {
   size: "tall" | "short";
   color: string;
   src: string;
+  category: "events" | "portraits";
 };
 
 export const photos: Photo[] = [
@@ -17,6 +18,7 @@ export const photos: Photo[] = [
     size: "tall",
     color: "bg-neutral-900",
     src: "/photo1.jpg",
+    category: "events",
   },
   {
     id: 2,
@@ -26,6 +28,7 @@ export const photos: Photo[] = [
     size: "short",
     color: "bg-stone-900",
     src: "/photo2.jpg",
+    category: "events",
   },
   {
     id: 3,
@@ -35,6 +38,7 @@ export const photos: Photo[] = [
     size: "short",
     color: "bg-zinc-900",
     src: "/photo3.jpg",
+    category: "events",
   },
   {
     id: 4,
@@ -44,6 +48,7 @@ export const photos: Photo[] = [
     size: "tall",
     color: "bg-neutral-800",
     src: "/photo4.jpg",
+    category: "portraits",
   },
   {
     id: 5,
@@ -53,6 +58,7 @@ export const photos: Photo[] = [
     size: "tall",
     color: "bg-stone-800",
     src: "/photo5.jpg",
+    category: "portraits",
   },
   {
     id: 6,
@@ -62,5 +68,6 @@ export const photos: Photo[] = [
     size: "short",
     color: "bg-zinc-800",
     src: "/photo6.jpg",
+    category: "portraits",
   },
 ];
