@@ -165,8 +165,9 @@ function CvDocument() {
 
 export async function GET() {
   const buffer = await renderToBuffer(<CvDocument />);
+  const body = new Uint8Array(buffer);
 
-  return new Response(buffer, {
+  return new Response(body, {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": 'attachment; filename="Jakub-Krukowski-CV.pdf"',
