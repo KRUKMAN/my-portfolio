@@ -131,10 +131,10 @@ export default function ConsultingClient() {
 
           <div className="pt-6">
             <a
-              href="/api/cv"
+              href="/cv.pdf"
               className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest border border-[#1c1917] px-4 py-2 hover:bg-[#1c1917] hover:text-[#f5f5f4] transition-colors"
             >
-              Download CV (PDF)
+              Download CV PDF
               <ArrowUpRight className="w-3 h-3" />
             </a>
           </div>
@@ -149,16 +149,7 @@ export default function ConsultingClient() {
       {/* --- EXPERIENCE (CV) --- */}
       <section className="py-24 px-6 md:px-12 max-w-5xl mx-auto border-t border-stone-300">
         <div className="grid md:grid-cols-[1fr,3fr] gap-12">
-          <div className="flex flex-col gap-4 sticky top-24 h-fit">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-stone-400">Timeline</h2>
-            <a
-              href="/api/cv"
-              className="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest border border-[#1c1917] px-3 py-2 text-[#1c1917] hover:bg-[#1c1917] hover:text-[#f5f5f4] transition-colors"
-            >
-              Need PDF version?
-              <ArrowUpRight className="w-3 h-3" />
-            </a>
-          </div>
+          <h2 className="text-xs font-mono uppercase tracking-widest text-stone-400 sticky top-24 h-fit">Timeline</h2>
 
           <div className="space-y-20 relative">
             {/* Vertical line for timeline effect */}
